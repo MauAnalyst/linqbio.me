@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linqbio</title>
+  </head>
+  <body>
+    <h1>Página inicial do Linqbio</h1>
+    <h2>Faça login</h2>
+    <p><a href="/login">fazer login</a></p>
+    <p><a href="/dashboard">dashboard</a></p>
+
+    <form class="user-link" action="/account" method="post">
+      <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
+      <div class="form-link">
+        <div class="user-link-input">
+          <label for="user_name_link">linqbio.me/</label>
+          <input
+            type="text"
+            placeholder="sr-maur"
+            id="user_name_link"
+            name="user_name_link"
+          />
+        </div>
+        <button type="submit" class="submit no-select">Criar Conta</button>
+      </div>
+    </form>
+  </body>
+</html>
