@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import { router } from "./routes/index.js";
 import auth0 from "express-openid-connect";
 import { connectDb } from "./config/db.js";
-import session from "express-session";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -25,15 +24,6 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
-app.use(
-  session({
-    secret: "dfkdsfkfjskjfkdsfmMdkfjfjdfasdasdjjdgpwoeiuewodkcmcksdsM",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 3600000 }, // expiração de 1 hora
-  })
-);
 
 app.use(cookieParser());
 

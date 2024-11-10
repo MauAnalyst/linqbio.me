@@ -7,7 +7,9 @@ const LinqbioSchema = new Schema({
   user_name: { type: String, required: true },
   user_email: { type: String, required: true },
   user_name_link: { type: String, default: "No Link" },
+  stripe_id: { type: String, default: "Pending" },
   buy_status: { type: String, default: "Pending" },
+  plan: { type: String, default: "Pending buy" },
   data_user_created: { type: Date, default: Date.now },
 });
 

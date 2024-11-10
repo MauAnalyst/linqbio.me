@@ -20,7 +20,6 @@
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-openid-connect": "^2.17.1",
-    "express-session": "^1.18.1",
     "mongoose": "^8.8.0",
     "multer-s3": "^3.0.1",
     "stripe": "^17.3.1"

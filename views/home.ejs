@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linqbio - link para as suas bios</title>
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandclose"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <h1><a href="/" class="no-select">LBIO</a></h1>
+        <nav>
+          <ul id="menu">
+            <li><a href="#exemples">Exemplos</a></li>
+            <li><a href="#howWorks">Como Funciona</a></li>
+            <li><a href="#pricing">Preços</a></li>
+            <li><a href="#help">Help</a></li>
+          </ul>
+          <a class="sign" href="/login">Entrar ou Criar Conta</a>
+          <div id="menu-resp">
+            <span class="material-symbols-outlined no-select" id="icon"
+              >menu</span
+            >
+            <!-- <span class="material-symbols-outlined">close</span> -->
+          </div>
+        </nav>
+      </div>
+      <div id="items-menu-resp">
+        <ul>
+          <li><a href="#exemples" class="no-select">Exemplos</a></li>
+          <li><a href="#howWorks" class="no-select">Como Funciona</a></li>
+          <li><a href="#pricing" class="no-select">Preços</a></li>
+          <li><a href="#help" class="no-select">Help</a></li>
+        </ul>
+      </div>
+    </header>
+    <div id="background-menu-resp"></div>
+
+    <section class="section-intro">
+      <div class="intro">
+        <div class="intro-text">
+          <div>
+            <h1>LINQBIO</h1>
+            <p>
+              Todas as suas redes sociais centralizadas em uma page
+              personalizada do seu jeito
+            </p>
+          </div>
+          <a href="#exemples" class="no-select"
+            >Veja exemplos
+            <span class="material-symbols-outlined">
+              keyboard_arrow_down
+            </span></a
+          >
+        </div>
+        <img src="./imgs/socialMedia.png" alt="Social Media desenho" />
+      </div>
+      <form class="user-link" action="/Create-Account" method="post">
+        <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
+        <div class="form-link">
+          <div class="user-link-input">
+            <label for="user_name_link">linqbio.me/</label>
+            <input
+              type="text"
+              placeholder="sr-maur"
+              id="user_name_link"
+              name="user_name_link"
+            />
+          </div>
+          <button type="submit" class="submit no-select">Criar Conta</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="section-exemples">
+      <h2>Exemplos de pages criadas no Linqbio</h2>
+      <div id="exemples">
+        <div class="group-exemple">
+          <a href="">linqbio.me/exemple</a>
+          <img src="https://picsum.photos/250/400" alt="" />
+        </div>
+        <div class="group-exemple">
+          <a href="">linqbio.me/exemple</a>
+          <img src="https://picsum.photos/250/400" alt="" />
+        </div>
+        <div class="group-exemple">
+          <a href="">linqbio.me/exemple</a>
+          <img src="https://picsum.photos/250/400" alt="" />
+        </div>
+        <!-- <div class="group-exemple">
+          <a href="">linqbio.me/exemple</a>
+          <img src="https://picsum.photos/250/400" alt="" />
+        </div> -->
+      </div>
+    </section>
+    <section class="section-howWorks">
+      <h2>Veja como funciona o Linqbio</h2>
+      <div id="howWorks">
+        <div class="howWork-group">
+          <img src="./imgs/fillingSurvey.png" alt="formulario desenho" />
+          <p>1. Crie uma conta, escolha seu plano e realize o pagamento.</p>
+        </div>
+        <div class="howWork-group">
+          <img src="./imgs/profile.png" alt="pagamento com cartão" />
+          <p>
+            2. Personalize sua page do seu jeito e coloque o link nas suas bios.
+          </p>
+        </div>
+        <div class="howWork-group">
+          <img src="./imgs/analyzeData.png" alt="analise de dados" />
+          <p>3. Monitore o fluxo de usuários na sua page.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pricing">
+      <h2>Confira os Planos e Preços</h2>
+      <div id="pricing">
+        <div class="pricing-group">
+          <h3>BASIC</h3>
+          <span class="pricing-value">19,99</span>
+          <p>
+            <span class="material-symbols-outlined">check</span>
+            Acesso por 1 ano
+          </p>
+          <p>
+            <span class="material-symbols-outlined">check</span>
+            Personalização limitada
+          </p>
+          <button>Obter Basic</button>
+        </div>
+        <div class="pricing-group">
+          <h3>PREMIUM</h3>
+          <span class="pricing-value">29,99</span>
+          <p>
+            <span class="material-symbols-outlined">check</span>
+            Acesso por 2 anos
+          </p>
+          <p>
+            <span class="material-symbols-outlined">check</span>
+            Personalização do seu jeito
+          </p>
+          <button>Obter Premium</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-help">
+      <div id="help">
+        <img src="./imgs/codeLearner.png" alt="suporte code" />
+        <div class="help-texts">
+          <h3>Precisa de ajuda ou tem uma sugestão ?</h3>
+          <p>
+            Entre em contato via e-mail email@gmail.com, responderemos o mais
+            rápido possível.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="./js/home.js"></script>
+
+    <!-- JS da navegção responsiva -->
+    <script src="./js/menu.js"></script>
+  </body>
+</html>

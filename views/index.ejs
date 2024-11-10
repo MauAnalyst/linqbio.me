@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linqbio - Página Inicial</title>
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogout"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <nav>
+          <ul id="menu">
+            <li><a href="/home#exemples">Exemplos</a></li>
+            <li><a href="/home#howWorks">Como Funciona</a></li>
+            <li><a href="/home#pricing">Preços</a></li>
+            <li><a href="/home#help">Help</a></li>
+          </ul>
+
+          <% if(login.user_name){ %>
+          <!-- com login -->
+          <div>
+            <a class="user-icon">
+              <img src="<%= login.user_picture %>" alt="gato desneho" />
+              <span class="material-symbols-outlined">arrow_drop_down</span></a
+            >
+            <div class="logged-user">
+              <div class="profile">
+                <img src="<%= login.user_picture %>" alt="gato desenho" />
+                <div class="profile-info">
+                  <p><%= login.user_name %></p>
+                  <p><%= login.user_email %></p>
+                </div>
+              </div>
+              <div class="sign-out">
+                <a href="/logout"
+                  ><span class="material-symbols-outlined">logout</span>
+                  Encerrar Sessão</a
+                >
+              </div>
+              <div class="actions">
+                <span class="material-symbols-outlined">delete</span>
+                Deletar Conta
+              </div>
+            </div>
+          </div>
+
+          <% } else {%>
+          <!-- sem login -->
+          <a class="sign" href="/login">Entrar ou Criar Conta</a>
+
+          <% } %>
+          <div id="menu-resp">
+            <span class="material-symbols-outlined no-select" id="icon"
+              >menu</span
+            >
+            <!-- <span class="material-symbols-outlined">close</span> -->
+          </div>
+        </nav>
+      </div>
+      <div id="items-menu-resp">
+        <ul>
+          <li><a href="/home#exemples" class="no-select">Exemplos</a></li>
+          <li><a href="/home#howWorks" class="no-select">Como Funciona</a></li>
+          <li><a href="/home#pricing" class="no-select">Preços</a></li>
+          <li><a href="/home#help" class="no-select">Help</a></li>
+        </ul>
+      </div>
+    </header>
+    <div id="background-menu-resp"></div>
+    <div id="delete-account">
+      <div class="conteiner-delete">
+        <h2>Aaaaah nããooooo</h2>
+        <img src="./imgs/bored.png" alt="gato triste" />
+        <p>
+          Poxa, você tem certeza que deseja <br />
+          deletar usa conta ?
+        </p>
+        <form action="/delete-account" class="actions-buttons" method="post">
+          <input
+            type="hidden"
+            id="user_id"
+            name="user_id"
+            value="<%= login.user_id %>"
+          />
+          <button id="confirm-delete" type="submit">Sim</button>
+
+          <button id="cancel-delete" type="button">Não</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- parte com login -->
+    <!-- se o usuário estiver logado e tiver o plano -->
+    <% if(login.buy_status === "Success") {%>
+    <section class="section-auth-plan">
+      <h1>Bem-vindo de volta <% login.user_name %>.</h1>
+      <p>
+        Todas as suas redes sociais centralizadas em uma page personalizada do
+        seu jeito
+      </p>
+
+      <img src="./imgs/socialMedia.png" alt="desenho social media" />
+
+      <div class="redirect-options">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/custom-page">Personalizar</a>
+        <a href="/view-page">Visualizar Page</a>
+        <a href="/configs">Configurações</a>
+      </div>
+    </section>
+    <% } else {%>
+
+    <!-- se o usuário estiver logado e não tiver o plano -->
+    <section class="section-auth-no-plan">
+      <h1>Você está quase lá, <%= login.user_name %>.</h1>
+      
+      <form action="/checkout" method="post">
+        <input
+          type="hidden"
+          id="user_id"
+          name="user_id"
+          value="<%= login.user_id %>"
+        />
+        <div id="pricing">
+          <label>
+            <input
+              type="radio"
+              name="plan"
+              value="basic"
+              style="display: none"
+            />
+            <div class="pricing-group">
+              <h3>BASIC</h3>
+              <span class="pricing-value">19,99</span>
+              <p>
+                <span class="material-symbols-outlined">check</span>
+                Acesso por <br />
+                1 ano
+              </p>
+              <p>
+                <span class="material-symbols-outlined">check</span>
+                Personalização <br />
+                Limitada
+              </p>
+            </div>
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="plan"
+              value="premium"
+              style="display: none"
+              checked
+            />
+            <div class="pricing-group">
+              <h3>PREMIUM</h3>
+              <span class="pricing-value">29,99</span>
+              <p>
+                <span class="material-symbols-outlined">check</span>
+                Acesso por <br />
+                2 anos
+              </p>
+              <p>
+                <span class="material-symbols-outlined">check</span>
+                Personalização <br />
+                do seu jeito
+              </p>
+            </div>
+          </label>
+        </div>
+        <div class="user-link">
+          
+        <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
+        <div class="form-link">
+          <div class="user-link-input">
+            <label for="user_name_link">linqbio.me/</label>
+            <input
+              type="text"
+              placeholder="sr-maur"
+              id="user_name_link"
+              name="user_name_link"
+            />
+          </div>
+          <button type="submit" class="submit no-select">Criar Page</button>
+        </div>
+   
+      </form>
+    </section>
+    <% } %>
+
+    <div id="loading">
+      <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+      </svg>
+    </div>
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- JS da navegção responsiva -->
+    <script src="./js/menu.js"></script>
+    <script src="./js/profile.js"></script>
+    <script src="./js/deleteAccount.js"></script>
+
+    <script src="./js/index.js"></script>
+  </body>
+</html>

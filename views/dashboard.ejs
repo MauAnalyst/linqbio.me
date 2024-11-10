@@ -1,17 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linqbio</title>
+    <title>Linqbio - dashboard</title>
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_down"
+    />
   </head>
   <body>
-    <h1>Página dashboard do Linqbio</h1>
-    <p><%= user_name %></p>
-    <p></p>
-    <p><a href="/logout">logout</a></p>
-    <p><a href="/">Pagina inicial</a></p>
+    <header>
+      <div class="navbar">
+        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <nav>
+          <ul id="menu">
+            <li><a href="#exemples" id="item-dash">Dashboard</a></li>
+            <li><a href="#howWorks" id="item-custom">Personalizar</a></li>
+            <li><a href="#pricing" id="item-help">Visualizar Page</a></li>
+            <li><a href="#help" id="item-config">Configurações</a></li>
+          </ul>
+          <!-- <a class="sign" href="/login">Entrar ou Criar Conta</a> -->
+          <a class="user-icon"
+            ><span class="material-symbols-outlined icon-person"> person </span
+            ><span class="material-symbols-outlined">arrow_drop_down</span></a
+          >
+          <div id="menu-resp">
+            <span class="material-symbols-outlined no-select" id="icon"
+              >menu</span
+            >
+            <!-- <span class="material-symbols-outlined">close</span> -->
+          </div>
+        </nav>
+      </div>
+      <div id="items-menu-resp">
+        <ul>
+          <li><a href="#exemples" id="item-dash">Dashboard</a></li>
+          <li><a href="#howWorks" id="item-custom">Personalização</a></li>
+          <li><a href="#pricing" id="item-help">Help</a></li>
+          <li><a href="#help" id="item-config">Configurações</a></li>
+        </ul>
+      </div>
+    </header>
+    <div id="background-menu-resp"></div>
 
-    <script src="../public/js/login.js"></script>
+    <section class="section-dash">
+      <h1>Dashboard</h1>
+      <h2>Bem vindo <%= login.user_name %></h2>
+    </section>
+
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="./js/menu.js"></script>
   </body>
 </html>
