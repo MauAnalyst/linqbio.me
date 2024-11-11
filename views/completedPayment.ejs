@@ -19,7 +19,7 @@
           <ul id="menu">
             <li><a href="/dashboard">Dashboard</a></li>
             <li><a href="/view-page">Visualizar Page</a></li>
-            <li><a href="/custom">Personalizar</a></li>
+            <li><a href="/custom-page">Personalizar</a></li>
             <li><a href="/configs">Configurações</a></li>
           </ul>
           <div>
@@ -59,7 +59,7 @@
         <ul>
           <li><a href="/dashboard">Dashboard</a></li>
           <li><a href="/view-page">Visualizar Page</a></li>
-          <li><a href="/custom">Personalizar</a></li>
+          <li><a href="/custom-page">Personalizar</a></li>
           <li><a href="/configs">Configurações</a></li>
         </ul>
       </div>
@@ -97,13 +97,10 @@
       </div>
     </div>
 
-    <!-- parte com login -->
-    <!-- se o usuário estiver logado e tiver o plano -->
     <section class="section-success">
-      <h1>Pagamento confirmado, <%= login.user_name %>!!!</h1>
-      <p>Você receberá uma confirmação de pagamento via e-mail também.</p>
-      <p>Comece por aqui:</p>
-      <button>Customizar Page</button>
+      <h1>Pagamento confirmado, <%= login.user_name %>!!</h1>
+      <p>Comece personalizando sua page:</p>
+      <button><a href="/custom-page">Persolizar Page</a></button>
     </section>
 
     <div id="loading">

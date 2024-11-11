@@ -10,6 +10,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogout"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   </head>
   <body>
     <header>
@@ -89,10 +91,11 @@
             </p>
           <%  } else  {%>
             <p>
-              Você já realizou o pagamento e não <br />
-              tem direito ao reembolsado <br />
-              devido passar de 30 dias,<br />
-              tem certeza que deseja deletar usa conta ?
+              Poxa, tem certeza que deseja <br />
+              deletar sua conta ? <br />
+              <span class="warning"
+            >você não terá direito ao reembolso, <br> pois a compra foi efeutada a mais de 30 dias.</span
+          > <br />
             </p>
           <% } %>
         <% } else { %>
@@ -131,6 +134,14 @@
         Todas as suas redes sociais centralizadas em uma page personalizada do
         seu jeito
       </p>
+      <i class="fab fa-instagram"></i>
+<i class="fab fa-facebook"></i>
+<i class="fab fa-twitter"></i>
+<i class="fab fa-tiktok"></i>
+<i class="fab fa-telegram"></i>
+
+
+
 
       <img src="./imgs/socialMedia.png" alt="desenho social media" />
 
@@ -202,12 +213,20 @@
             </div>
           </label>
         </div>
+
+        <div id="coupon-input">
+          <label for="coupon">Cupom (50% de desconto)</label>
+          <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro === 'Coupon'){ %>
+            <p id="msgm-erro"><%= log_erro.msgm %></p>
+            <% } %>
+          <input type="text" id="coupon" name="coupon">
+        </div>
+
         <div class="user-link">
-          
         <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
-        <% if(typeof msgm !== 'undefined'){ %>
-        <p id="msgm-erro"><%= msgm %></p>
-        <% } %>
+        <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro === 'Invalid link'){ %>
+          <p id="msgm-erro"><%= log_erro.msgm %></p>
+          <% } %>
         <div class="form-link">
           <div class="user-link-input">
             <label for="user_name_link">linqbio.me/</label>
@@ -225,16 +244,17 @@
       </form>
     </section>
     <% } %>
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
 
     <div id="loading">
       <svg viewBox="25 25 50 50">
         <circle r="20" cy="50" cx="50"></circle>
       </svg>
     </div>
-    <footer>
-      <p>Desenvolvido por Mauricio Brito dos Santos</p>
-      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
-    </footer>
+    
 
     <!-- JS da navegção responsiva -->
     <script src="./js/menu.js"></script>

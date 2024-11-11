@@ -1,4 +1,4 @@
-import { LinqbioDb } from "../models/linqbioDB.js";
+import { LinqbioDb, LinksUser } from "../models/linqbioDB.js";
 import { ManagementClient } from "auth0";
 import dotenv from "dotenv";
 import Stripe from "stripe";
@@ -37,7 +37,7 @@ const UserController = async (req, res) => {
       const user_name_link = req.cookies.user_name_link || "";
       res.clearCookie("user_name_link"); // Limpa o cookie após o uso
 
-      let user = await LinqbioDb.findOne({ user_email });
+      let user = await LinqbioDb.findOne({ user_id });
       let login = {
         user_id: user_id,
         user_name: user_name,
@@ -90,7 +90,7 @@ const UserController = async (req, res) => {
         }
       }
 
-      res.render("index", { login });
+      res.render("index", { log_erro: {}, login });
     } else {
       res.redirect("/home");
     }
@@ -137,13 +137,15 @@ const DeleteAccount = async (req, res) => {
           diffInDays > 30
         ) {
           //não realizará o reembolso, pois tentou burlar
+          await LinksUser.deleteOne({ user_id });
+
           await LinqbioDb.findOneAndUpdate(
             { user_id },
             {
               user_id: "Canceled",
-              user_email: "Canceled",
-              user_name_link: "canceled",
+              user_name_link: "Canceled",
               buy_status: "Canceled",
+              user_picture: "Canceled",
               reimbursement_status: "Canceled",
             },
             { new: true }
@@ -160,12 +162,14 @@ const DeleteAccount = async (req, res) => {
             payment_intent: session.payment_intent,
           });
 
+          await LinksUser.deleteOne({ user_id });
+
           await LinqbioDb.findOneAndUpdate(
             { user_id },
             {
               user_id: "Canceled",
-              user_email: "Canceled",
-              user_name_link: "canceled",
+              user_name_link: "Canceled",
+              user_picture: "Canceled",
               stripe_id: "Canceled",
               buy_status: "Canceled",
               reimbursement_status: "Refunded",
@@ -174,12 +178,14 @@ const DeleteAccount = async (req, res) => {
           );
         }
       } else {
+        await LinksUser.deleteOne({ user_id });
+
         await LinqbioDb.findOneAndUpdate(
           { user_id },
           {
             user_id: "Canceled",
-            user_email: "Canceled",
             user_name_link: "canceled",
+            user_picture: "canceled",
             stripe_id: "Canceled",
             buy_status: "Canceled",
             reimbursement_status: "Expired",
@@ -187,6 +193,21 @@ const DeleteAccount = async (req, res) => {
           { new: true }
         );
       }
+    } else {
+      await LinksUser.deleteOne({ user_id });
+
+      await LinqbioDb.findOneAndUpdate(
+        { user_id },
+        {
+          user_id: "Canceled",
+          user_name_link: "canceled",
+          user_picture: "canceled",
+          stripe_id: "Canceled",
+          buy_status: "Canceled",
+          reimbursement_status: "Expired",
+        },
+        { new: true }
+      );
     }
 
     await auth0Management.users.delete({ id: user_id });
@@ -204,16 +225,27 @@ const Payment = async (req, res) => {
   const user_email = req.oidc.user.email;
   let name_prod = "PLANO " + plan.toUpperCase();
   let value_prod;
-  const couponValue = +process.env.COUPON_VALUE;
+  const coupon_value = +process.env.COUPON_DESC;
   const coupons = process.env.COUPONS.split(",");
+
+  let log_erro = {
+    type_erro: "",
+    msgm: "",
+  };
 
   value_prod =
     plan === "basic"
       ? +process.env.PLAN_BASIC_VALUE
       : +process.env.PLAN_PREMIUM_VALUE;
 
-  if (coupons.includes(coupon)) {
-    value_prod -= couponValue;
+  if (coupon !== "") {
+    if (coupons.includes(coupon)) {
+      value_prod *= coupon_value;
+      value_prod = value_prod.toFixed();
+    } else {
+      log_erro.type_erro = "Coupon";
+      log_erro.msgm = "Cupom Inválido, favor rever com o vendedor";
+    }
   }
 
   let dados = {
@@ -224,7 +256,7 @@ const Payment = async (req, res) => {
           product_data: {
             name: name_prod,
           },
-          unit_amount: Math.round(value_prod * 100),
+          unit_amount: Math.round(+value_prod * 100),
         },
         quantity: 1,
       },
@@ -249,16 +281,20 @@ const Payment = async (req, res) => {
     );
 
     if (user_link && user_link.user_id !== user_id) {
-      const msgm = "nome já utilizado, por favor, tente outro";
-      res.render("index", { msgm, login });
+      log_erro.type_erro = "Invalid link";
+      log_erro.msgm = "Nome em uso ou inválido, por favor, tente outro";
+    }
+
+    if (log_erro.type_erro !== "") {
+      res.render("index", { log_erro, login });
     } else {
       const session = await stripe.checkout.sessions.create(dados);
 
       const stripe_id = session.id;
 
-      let log = await LinqbioDb.findOneAndUpdate(
+      await LinqbioDb.findOneAndUpdate(
         { user_id },
-        { user_name_link, stripe_id, plan },
+        { user_name_link, stripe_id, plan, coupon },
         { new: true }
       );
 
@@ -273,14 +309,6 @@ const CompletedPayment = async (req, res) => {
   const user_name = req.oidc.user.name;
   const user_id = req.oidc.user.sub;
   const user_email = req.oidc.user.email;
-
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   try {
     const result = Promise.all([
@@ -303,6 +331,12 @@ const CompletedPayment = async (req, res) => {
       },
       { new: true }
     );
+
+    const user_links = new LinksUser({
+      user_id,
+    });
+
+    await user_links.save();
 
     const user = await LinqbioDb.findOne({ user_id });
 

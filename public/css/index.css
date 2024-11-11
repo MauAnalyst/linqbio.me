@@ -244,13 +244,7 @@ header {
   margin-bottom: 1rem;
 }
 
-#delete-account
-  .conteiner-delete
-  p
-  .warning
-  #delete-account
-  .conteiner-delete
-  .actions-buttons {
+#delete-account .conteiner-delete .actions-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -390,7 +384,34 @@ section p {
   margin-top: 3rem;
 }
 
-/* cadastro rápido */
+/* cupom de desconto */
+
+#coupon-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#coupon-input label {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+#coupon-input input[type="text"] {
+  border: 0.01rem solid var(--color-text-primary);
+  max-width: 450px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+#coupon-input input[type="text"]:focus {
+  box-shadow: rgba(0, 122, 255, 0.9) 0px 1px 4px;
+  border-color: rgba(0, 122, 255, 0.8);
+}
+
+/* nome do link do usuário */
 .user-link {
   max-width: 500px;
   margin: 3rem auto;
@@ -423,14 +444,14 @@ section p {
   transition: all 0.1s ease;
 }
 
-.user-link-input input[type="text"] {
+input[type="text"] {
   border: none;
   width: 100%;
   padding: 0.8rem 0;
   font-size: 1.01rem;
 }
 
-.user-link-input input[type="text"]:focus {
+input[type="text"]:focus {
   outline: none;
 }
 
@@ -599,6 +620,12 @@ footer p {
   #help img {
     max-width: 150px;
     max-height: 150px;
+  }
+}
+
+@media all and (max-width: 500px) {
+  #coupon-input input[type="text"] {
+    max-width: 90%;
   }
 }
 
