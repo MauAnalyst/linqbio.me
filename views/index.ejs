@@ -78,16 +78,42 @@
       <div class="conteiner-delete">
         <h2>Aaaaah nããooooo</h2>
         <img src="./imgs/bored.png" alt="gato triste" />
+        <% if(login.buy_status === 'Success'){ %>
+          <% if( login.reimbursement_status === 'Authorized' ){ %>
+            <p>
+              Poxa, tem certeza que deseja <br />
+              deletar sua conta ? <br />
+              <span class="warning"
+            >você será reembolsado em até 10 dias utéis.</span
+          > <br />
+            </p>
+          <%  } else  {%>
+            <p>
+              Você já realizou o pagamento e não <br />
+              tem direito ao reembolsado <br />
+              devido passar de 30 dias,<br />
+              tem certeza que deseja deletar usa conta ?
+            </p>
+          <% } %>
+        <% } else { %>
         <p>
           Poxa, você tem certeza que deseja <br />
           deletar usa conta ?
         </p>
+        <% } %>
+
         <form action="/delete-account" class="actions-buttons" method="post">
           <input
             type="hidden"
             id="user_id"
             name="user_id"
             value="<%= login.user_id %>"
+          />
+          <input
+            type="hidden"
+            id="reimbursement_status"
+            name="reimbursement_status"
+            value="<%= login.reimbursement_status %>"
           />
           <button id="confirm-delete" type="submit">Sim</button>
 
@@ -100,7 +126,7 @@
     <!-- se o usuário estiver logado e tiver o plano -->
     <% if(login.buy_status === "Success") {%>
     <section class="section-auth-plan">
-      <h1>Bem-vindo de volta <% login.user_name %>.</h1>
+      <h1>Bem-vindo de volta <%= login.user_name %>.</h1>
       <p>
         Todas as suas redes sociais centralizadas em uma page personalizada do
         seu jeito
@@ -179,6 +205,9 @@
         <div class="user-link">
           
         <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
+        <% if(typeof msgm !== 'undefined'){ %>
+        <p id="msgm-erro"><%= msgm %></p>
+        <% } %>
         <div class="form-link">
           <div class="user-link-input">
             <label for="user_name_link">linqbio.me/</label>
@@ -187,9 +216,10 @@
               placeholder="sr-maur"
               id="user_name_link"
               name="user_name_link"
+              value="<%= login.user_name_link %>"
             />
           </div>
-          <button type="submit" class="submit no-select">Criar Page</button>
+          <button type="submit" class="submit" id="create-page">Criar Page</button>
         </div>
    
       </form>
@@ -209,7 +239,6 @@
     <!-- JS da navegção responsiva -->
     <script src="./js/menu.js"></script>
     <script src="./js/profile.js"></script>
-    <script src="./js/deleteAccount.js"></script>
 
     <script src="./js/index.js"></script>
   </body>

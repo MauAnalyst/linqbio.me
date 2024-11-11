@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linqbio - Página Inicial</title>
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/completedPayment.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogout"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <nav>
+          <ul id="menu">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/view-page">Visualizar Page</a></li>
+            <li><a href="/custom">Personalizar</a></li>
+            <li><a href="/configs">Configurações</a></li>
+          </ul>
+          <div>
+            <a class="user-icon">
+              <img src="<%= login.user_picture %>" alt="gato desenhado" />
+              <span class="material-symbols-outlined">arrow_drop_down</span></a
+            >
+            <div class="logged-user">
+              <div class="profile">
+                <img src="<%= login.user_picture %>" alt="gato desenho" />
+                <div class="profile-info">
+                  <p><%= login.user_name %></p>
+                  <p><%= login.user_email %></p>
+                </div>
+              </div>
+              <div class="sign-out">
+                <a href="/logout"
+                  ><span class="material-symbols-outlined">logout</span>
+                  Encerrar Sessão</a
+                >
+              </div>
+              <div class="actions">
+                <span class="material-symbols-outlined">delete</span>
+                Deletar Conta
+              </div>
+            </div>
+          </div>
+          <div id="menu-resp">
+            <span class="material-symbols-outlined no-select" id="icon"
+              >menu</span
+            >
+            <!-- <span class="material-symbols-outlined">close</span> -->
+          </div>
+        </nav>
+      </div>
+      <div id="items-menu-resp">
+        <ul>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/view-page">Visualizar Page</a></li>
+          <li><a href="/custom">Personalizar</a></li>
+          <li><a href="/configs">Configurações</a></li>
+        </ul>
+      </div>
+    </header>
+    <div id="background-menu-resp"></div>
+    <div id="delete-account">
+      <div class="conteiner-delete">
+        <h2>Aaaaah nããooooo</h2>
+        <img src="./imgs/bored.png" alt="gato triste" />
+        <p>
+          Poxa, tem certeza que deseja <br />
+          deletar sua conta ? <br />
+          <span class="warning"
+            >você será reembolsado em até 10 dias utéis.</span
+          >
+          <br />
+        </p>
+        <form action="/delete-account" class="actions-buttons" method="post">
+          <input
+            type="hidden"
+            id="user_id"
+            name="user_id"
+            value="<%= login.user_id %>"
+          />
+          <input
+            type="hidden"
+            id="reimbursement_status"
+            name="reimbursement_status"
+            value="<%= login.reimbursement_status %>"
+          />
+          <button id="confirm-delete" type="submit">Sim</button>
+
+          <button id="cancel-delete" type="button">Não</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- parte com login -->
+    <!-- se o usuário estiver logado e tiver o plano -->
+    <section class="section-success">
+      <h1>Pagamento confirmado, <%= login.user_name %>!!!</h1>
+      <p>Você receberá uma confirmação de pagamento via e-mail também.</p>
+      <p>Comece por aqui:</p>
+      <button>Customizar Page</button>
+    </section>
+
+    <div id="loading">
+      <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+      </svg>
+    </div>
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- JS da navegção responsiva -->
+    <script src="./js/menu.js"></script>
+    <script src="./js/profile.js"></script>
+  </body>
+</html>

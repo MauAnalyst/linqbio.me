@@ -7,6 +7,7 @@ import {
   fastUserCreation,
   DeleteAccount,
   Payment,
+  CompletedPayment,
 } from "../controllers/linqbioController.js";
 
 const router = express.Router();
@@ -17,7 +18,8 @@ router.get("/home", (req, res) => {
 });
 router.get("/", UserController);
 router.post("/checkout", Payment);
-router.post("/account", fastUserCreation);
+router.get("/complete", CompletedPayment);
+router.post("/create-account", fastUserCreation);
 router.post("/delete-account", DeleteAccount);
 router.get("/dashboard", requiresAuth(), AcessUser);
 

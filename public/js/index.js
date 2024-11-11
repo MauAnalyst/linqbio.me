@@ -1,5 +1,6 @@
 const userNameLink = document.querySelectorAll("#user_name_link");
 const fastLink = document.querySelectorAll(".user-link-input");
+const submit = document.querySelector("#create-page");
 
 userNameLink.forEach((e, i) => {
   fastLink[i].addEventListener("click", () => {
@@ -12,4 +13,8 @@ userNameLink.forEach((e, i) => {
       fastLink[i].style.boxShadow = "";
     }
   });
+});
+
+submit.addEventListener("click", () => {
+  loading.style.display = "flex";
 });

@@ -238,7 +238,19 @@ header {
   text-align: center;
 }
 
-#delete-account .conteiner-delete .actions-buttons {
+#delete-account .conteiner-delete p .warning {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+#delete-account
+  .conteiner-delete
+  p
+  .warning
+  #delete-account
+  .conteiner-delete
+  .actions-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -537,6 +549,11 @@ input[type="radio"]:checked + .pricing-group {
 
 .pricing-group .material-symbols-outlined {
   font-size: 1.1rem;
+}
+
+#msgm-erro {
+  font-size: 0.8rem;
+  color: #ff2c2c;
 }
 
 /* ------  footer  ------ */
