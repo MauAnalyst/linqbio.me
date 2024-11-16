@@ -1,30 +1,30 @@
 Conventional Commits
+
 feat: Adição de uma nova funcionalidade.
-
 Exemplo: feat: adicionar funcionalidade de login
+
 fix: Correção de bugs.
-
 Exemplo: fix: corrigir erro de validação de email
+
 docs: Alterações na documentação (ex.: README, guias).
-
 Exemplo: docs: atualizar instruções de instalação
+
 style: Alterações que não afetam a lógica (ex.: formatação, espaçamento).
-
 Exemplo: style: ajustar indentação no arquivo main.js
+
 refactor: Melhorias no código sem mudar funcionalidades (ex.: reorganização).
-
 Exemplo: refactor: simplificar função de cálculo
+
 perf: Melhorias de desempenho.
-
 Exemplo: perf: otimizar a renderização de elementos
+
 test: Adição ou modificação de testes.
-
 Exemplo: test: adicionar testes para validação de email
+
 build: Mudanças no processo de build ou dependências.
-
 Exemplo: build: atualizar dependências do projeto
-ci: Alterações no processo de integração contínua (CI).
 
+ci: Alterações no processo de integração contínua (CI).
 Exemplo: ci: corrigir caminho no script de deploy
 chore: Alterações menores que não impactam o código de produção.
 

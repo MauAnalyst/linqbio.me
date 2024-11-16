@@ -17,35 +17,63 @@ const LinqbioSchema = new Schema({
   date_created_user: { type: Date, default: Date.now },
 });
 
-const LinksUserSchema = new Schema({
+const UserCustomSchema = new Schema({
   user_id: { type: String, required: true },
-  links_user: {
-    instagram: { type: String, default: "No add" },
-    facebook: { type: String, default: "No add" },
-    twitter: { type: String, default: "No add" },
-    linkedin: { type: String, default: "No add" },
-    youtube: { type: String, default: "No add" },
-    tiktok: { type: String, default: "No add" },
-    twitch: { type: String, default: "No add" },
-    pinterest: { type: String, default: "No add" },
-    onlyfans: { type: String, default: "No add" },
-    snapchat: { type: String, default: "No add" },
-    discord: { type: String, default: "No add" },
-    telegram: { type: String, default: "No add" },
-    whatsapp: { type: String, default: "No add" },
-    wechat: { type: String, default: "No add" },
-    threads: { type: String, default: "No add" },
-    github: { type: String, default: "No add" },
-    personal_website: { type: String, default: "No add" },
-    blog: { type: String, default: "No add" },
-    privace: { type: String, default: "No add" },
-    fansly: { type: String, default: "No add" },
-    justforfans: { type: String, default: "No add" },
-    manyvids: { type: String, default: "No add" },
+  profile: {
+    user_name: { type: String, required: true },
+    user_description: {
+      type: String,
+      default: "Me acompanhe em todas as redes",
+    },
   },
+  theme: {
+    body_theme: { type: String, default: "body-theme-3" },
+    theme_user_name: { type: String, default: "theme-user-name-3" },
+    theme_user_slogan: { type: String, default: "theme-user-slogan-3" },
+  },
+  links_user: [
+    {
+      id_link: { type: String, default: "" },
+      link: { type: String, default: "" },
+      origin: { type: String, default: "" }, // TikTok, Instagram, etc.
+      other: { type: String, default: "" }, // Para outras origens, onde o usuário define o nome
+      title: { type: String, default: "" },
+      description: { type: String, default: "" },
+    },
+  ],
+  log: { type: String, default: "" },
 });
 
-const LinqbioDb = mongoose.model("LinqbioDb", LinqbioSchema);
-const LinksUser = mongoose.model("LinksUser", LinksUserSchema);
+// const LinksUserSchema = new Schema({
+//   user_id: { type: String, required: true },
+//   links_user: {
+//     instagram: { type: String, default: "No add" },
+//     facebook: { type: String, default: "No add" },
+//     twitter: { type: String, default: "No add" },
+//     linkedin: { type: String, default: "No add" },
+//     youtube: { type: String, default: "No add" },
+//     tiktok: { type: String, default: "No add" },
+//     twitch: { type: String, default: "No add" },
+//     pinterest: { type: String, default: "No add" },
+//     onlyfans: { type: String, default: "No add" },
+//     snapchat: { type: String, default: "No add" },
+//     discord: { type: String, default: "No add" },
+//     telegram: { type: String, default: "No add" },
+//     whatsapp: { type: String, default: "No add" },
+//     wechat: { type: String, default: "No add" },
+//     threads: { type: String, default: "No add" },
+//     github: { type: String, default: "No add" },
+//     personal_website: { type: String, default: "No add" },
+//     blog: { type: String, default: "No add" },
+//     privace: { type: String, default: "No add" },
+//     fansly: { type: String, default: "No add" },
+//     justforfans: { type: String, default: "No add" },
+//     manyvids: { type: String, default: "No add" },
+//     other: { type: String, default: "No add" },
+//   },
+// });
 
-export { LinqbioDb, LinksUser };
+const LinqbioDb = mongoose.model("LinqbioDb", LinqbioSchema);
+const UserCustom = mongoose.model("UserCustom", UserCustomSchema);
+
+export { LinqbioDb, UserCustom };

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linqbio - Página Inicial</title>
+    <link rel="shortcut icon" href="./imgs/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/viewPage.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogoutandaddandedit"
+    />
+  </head>
+  <body id="<%=userCustom.theme.body_theme%>">
+
+    <section class="section-view">
+      <div class="view-profile">
+        <div class="profile-photo no-select">
+          <img src="<%= login.user_picture %>" alt="gato desenho" />
+        </div>
+
+        <div class="view-info">
+          <!--JS aqui-->
+          <p class="user-name" id="<%= userCustom.theme.theme_user_name %>">
+            <%= userCustom.profile.user_name %>
+          </p>
+          <p class="user-slogan" id="<%=userCustom.theme.theme_user_slogan %>">
+            <%= userCustom.profile.user_description %>
+          </p>
+        </div>
+      </div>
+      <!-- links user -->
+      <div class="view-links">
+        <% userCustom.links_user.forEach(element => { %>
+        <div>
+          <a
+            href="<%= element.link %>"
+            id="origin-a"
+            origin="<%= element.origin %>"
+          >
+            <span id="id-link" style="display: none"
+              ><%= element.id_link %></span
+            >
+            <span class="icon">
+              <img
+                src="<%= `./imgs/icones/${element.origin}.svg` %>"
+                alt="<%= element.origin %>"
+            /></span>
+            <span class="info">
+              <span class="title"><%= element.title %> </span>
+              <span class="descri"><%= element.description %></span>
+            </span>
+          </a>
+        </div>
+        <% }) %>
+    </section>
+
+    <footer>
+      <p>Desenvolvido por Mauricio Brito dos Santos</p>
+      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="./js/menu.js"></script>
+    <script src="./js/profile.js"></script>
+  </body>
+</html>

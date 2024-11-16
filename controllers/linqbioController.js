@@ -1,5 +1,6 @@
-import { LinqbioDb, LinksUser } from "../models/linqbioDB.js";
+import { LinqbioDb, UserCustom } from "../models/linqbioDB.js";
 import { ManagementClient } from "auth0";
+import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import Stripe from "stripe";
 
@@ -58,6 +59,7 @@ const UserController = async (req, res) => {
 
         await user.save();
       } else {
+        login.user_name = user.user_name;
         if (user.buy_status === "Success") {
           login.buy_status = "Success";
 
@@ -99,18 +101,6 @@ const UserController = async (req, res) => {
   }
 };
 
-const AcessUser = async (req, res) => {
-  const user_name = req.oidc.user.name;
-  const user_id = req.oidc.user.sub;
-  const user_email = req.oidc.user.email;
-
-  try {
-    res.render("dashboard", { user_name });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const DeleteAccount = async (req, res) => {
   const { user_id, reimbursement_status } = req.body;
 
@@ -137,7 +127,7 @@ const DeleteAccount = async (req, res) => {
           diffInDays > 30
         ) {
           //não realizará o reembolso, pois tentou burlar
-          await LinksUser.deleteOne({ user_id });
+          await UserCustom.deleteOne({ user_id });
 
           await LinqbioDb.findOneAndUpdate(
             { user_id },
@@ -162,7 +152,7 @@ const DeleteAccount = async (req, res) => {
             payment_intent: session.payment_intent,
           });
 
-          await LinksUser.deleteOne({ user_id });
+          await UserCustom.deleteOne({ user_id });
 
           await LinqbioDb.findOneAndUpdate(
             { user_id },
@@ -178,7 +168,7 @@ const DeleteAccount = async (req, res) => {
           );
         }
       } else {
-        await LinksUser.deleteOne({ user_id });
+        await UserCustom.deleteOne({ user_id });
 
         await LinqbioDb.findOneAndUpdate(
           { user_id },
@@ -194,7 +184,7 @@ const DeleteAccount = async (req, res) => {
         );
       }
     } else {
-      await LinksUser.deleteOne({ user_id });
+      await UserCustom.deleteOne({ user_id });
 
       await LinqbioDb.findOneAndUpdate(
         { user_id },
@@ -248,6 +238,13 @@ const Payment = async (req, res) => {
     }
   }
 
+  const linkRegex = /^[a-zA-Z0-9_-]{5,15}$/; // Permite letras, números, underscores e hífens, com 3-20 caracteres
+  if (!linkRegex.test(user_name_link)) {
+    log_erro.type_erro = "Invalid link";
+    log_erro.msgm =
+      "Nome de usuário inválido. Use apenas letras, números, hífens e underscores, com 3-20 caracteres.";
+  }
+
   let dados = {
     line_items: [
       {
@@ -275,7 +272,8 @@ const Payment = async (req, res) => {
     user_name_link: user_name_link,
   };
   try {
-    //const user_link = await LinqbioDb.find({ user_name_link });
+    const user = await LinqbioDb.findOne({ user_id });
+    login.user_picture = user.user_picture;
     const user_link = await LinqbioDb.findOne({ user_name_link }).select(
       "user_id user_name_link"
     );
@@ -309,6 +307,7 @@ const CompletedPayment = async (req, res) => {
   const user_name = req.oidc.user.name;
   const user_id = req.oidc.user.sub;
   const user_email = req.oidc.user.email;
+  const uniqueId = uuidv4();
 
   try {
     const result = Promise.all([
@@ -332,13 +331,24 @@ const CompletedPayment = async (req, res) => {
       { new: true }
     );
 
-    const user_links = new LinksUser({
+    const user = await LinqbioDb.findOne({ user_id });
+
+    const userCustom = new UserCustom({
       user_id,
+      profile: {
+        user_name: user_name,
+      },
+      links_user: {
+        id_link: uniqueId,
+        link: `https://linqbio.me/${user.user_name_link}`,
+        origin: "linqbio", // TikTok, Instagram, etc.
+        other: "", // Para outras origens, onde o usuário define o nome
+        title: "Meu Linqbio",
+        description: "Veja todas as minhas redes sociais",
+      },
     });
 
-    await user_links.save();
-
-    const user = await LinqbioDb.findOne({ user_id });
+    await userCustom.save();
 
     let login = {
       user_id: user_id,
@@ -354,6 +364,216 @@ const CompletedPayment = async (req, res) => {
   }
 };
 
+const AcessUser = async (req, res) => {
+  const user_name = req.oidc.user.name;
+  const user_id = req.oidc.user.sub;
+  const user_email = req.oidc.user.email;
+
+  try {
+    res.render("dashboard", { user_name });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//custom page
+const AcessCustom = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+
+  try {
+    const user = await LinqbioDb.findOne({ user_id });
+
+    if (!user) {
+      // Se o usuário não for encontrado, redireciona ou envia uma resposta de erro
+      return res.redirect("/");
+    }
+
+    let login = {
+      user_id: user.user_id,
+      user_name: user.user_name,
+      user_email: user.user_email,
+      user_picture: user.user_picture,
+      buy_status: user.buy_status,
+      reimbursement_status: user.reimbursement_status,
+    };
+
+    if (user.buy_status !== "Success") {
+      res.redirect("/");
+    } else {
+      const SearchUserCustom = await UserCustom.findOne({ user_id });
+
+      let userCustom = SearchUserCustom;
+
+      await UserCustom.findOneAndUpdate(
+        { user_id },
+        {
+          log: "",
+        },
+        { new: true }
+      );
+
+      return res.render("customPage", { userCustom, login });
+      //res.json({ userCustom });
+    }
+  } catch (error) {
+    console.error(error);
+    // Em caso de erro, redireciona ou exibe uma página de erro
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+const UpdateProfile = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+  let { user_name, user_description } = req.body;
+  try {
+    if (user_name.length > 20 || user_description.length > 60) {
+      res.render("customPage");
+    }
+
+    if (user_name === "") {
+      const check_user = await LinqbioDb.findOne({ user_id });
+      user_name = check_user.user_name;
+    }
+
+    if (user_description === "") {
+      const check_user = await LinqbioDb.findOne({ user_id });
+      user_description = check_user.user_description;
+    }
+
+    //atualizando dados
+    await LinqbioDb.findOneAndUpdate(
+      { user_id },
+      {
+        user_name,
+      },
+      { new: true }
+    );
+
+    await UserCustom.findOneAndUpdate(
+      { user_id },
+      {
+        "profile.user_name": user_name,
+        "profile.user_description": user_description,
+      },
+      { new: true }
+    );
+
+    //return res.render("customPage", { userCustom, login });
+    res.redirect("/custom-page");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao atualizar o perfil" });
+  }
+};
+
+const UpdateBackground = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+  let { theme } = req.body; //ex: theme-1
+
+  theme = theme.split("-")[1];
+  try {
+    await UserCustom.findOneAndUpdate(
+      { user_id },
+      {
+        "theme.body_theme": `body-theme-${theme}`,
+        "theme.theme_user_name": `theme-user-name-${theme}`,
+        "theme.theme_user_slogan": `theme-user-slogan-${theme}`,
+      },
+      { new: true }
+    );
+
+    return res.redirect("/custom-page");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar tema" });
+  }
+};
+
+const UpdateLink = async (req, res) => {
+  const uniqueId = uuidv4();
+  const user_id = req.oidc.user.sub;
+  let log;
+  let { id_link, link, select_origin, other, title, description, action_link } =
+    req.body;
+
+  if (action_link === "save" && id_link !== "") {
+    action_link = "edit";
+  }
+
+  try {
+    if (!link.toUpperCase().startsWith("HTTPS")) {
+      log = "O link não é seguro ou é inválido, por favor utilizar https.";
+
+      await UserCustom.findOneAndUpdate(
+        { user_id },
+        {
+          log,
+        },
+        { new: true }
+      );
+    } else {
+      if (action_link === "save") {
+        //adicionando novo link
+        await UserCustom.findOneAndUpdate(
+          { user_id },
+          {
+            $push: {
+              links_user: {
+                id_link: uniqueId,
+                link,
+                origin: select_origin,
+                other,
+                title,
+                description,
+              },
+            },
+          },
+          { new: true }
+        );
+      } else if (action_link === "delete") {
+        await UserCustom.findOneAndUpdate(
+          { user_id },
+          {
+            $pull: {
+              links_user: { id_link: id_link },
+            },
+          },
+          { new: true }
+        );
+      } else {
+        await UserCustom.findOneAndUpdate(
+          { user_id, "links_user.id_link": id_link }, // Filtra pelo `id_link`
+          {
+            $set: {
+              "links_user.$.link": link, // Atualiza campos específicos
+              "links_user.$.origin": select_origin,
+              "links_user.$.other": other,
+              "links_user.$.title": title,
+              "links_user.$.description": description,
+            },
+          },
+          { new: true }
+        );
+      }
+    }
+    return res.redirect("/custom-page");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
+  }
+};
+
+const ViewPage = async (req, res) => {
+  const { user_name_link } = req.params;
+  try {
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
+  }
+};
+
+//-------------,--------------
+
 export {
   UserController,
   AcessUser,
@@ -361,6 +581,11 @@ export {
   DeleteAccount,
   Payment,
   CompletedPayment,
+  AcessCustom,
+  UpdateProfile,
+  UpdateBackground,
+  UpdateLink,
+  ViewPage,
 };
 
 //modelo
@@ -368,5 +593,6 @@ const variavel = async (req, res) => {
   try {
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
   }
 };
