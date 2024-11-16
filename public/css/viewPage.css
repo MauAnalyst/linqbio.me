@@ -381,6 +381,17 @@ body {
   width: 100%;
 }
 
+.section-view h1 {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin-top: 1rem;
+  top: 0;
+  left: 0;
+  font-size: 1.2rem;
+}
+
 /* profile */
 .section-view .view-profile {
   display: flex;

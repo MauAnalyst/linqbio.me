@@ -202,6 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const salveAll = document.querySelectorAll("#salve");
 salveAll.forEach((e) => {
   e.addEventListener("click", () => {
-    e.style.display = "flex";
+    document.querySelector("#loading").style.display = "flex";
   });
 });

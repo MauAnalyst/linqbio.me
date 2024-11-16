@@ -22,8 +22,8 @@
             <li>
               <a href="/user/custom-page" id="custom-page">Personalizar</a>
             </li>
-            <li><a href="/user/help" id="help">Help</a></li>
-            <li><a href="/user/configs" id="configs">Configurações</a></li>
+            <li><a href="/user/help" id="help">Ajuda</a></li>
+            <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
           </ul>
           <div>
             <a class="user-icon">
@@ -66,7 +66,7 @@
           <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
           <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
           <li><a href="/user/help" id="help">Help</a></li>
-          <li><a href="/user/configs" id="configs">Configurações</a></li>
+          <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
         </ul>
       </div>
     </header>
@@ -74,7 +74,7 @@
     <div id="delete-account">
       <div class="conteiner-delete">
         <h2>Aaaaah nããooooo</h2>
-        <img src="./imgs/bored.png" alt="gato triste" />
+        <img src="/imgs/bored.png" alt="gato triste" />
 
         <% if(login.buy_status === 'Success'){ %> <% if(
         login.reimbursement_status === 'Authorized' ){ %>
@@ -92,7 +92,7 @@
           deletar sua conta ? <br />
           <span class="warning"
             >você não terá direito ao reembolso, <br />
-            pois a compra foi efeutada a mais de 30 dias.</span
+            pois a compra foi efeutada a mais de 7 dias.</span
           >
           <br />
         </p>
@@ -126,6 +126,7 @@
         </form>
       </div>
     </div>
+
     <section class="section-view">
       <div class="view-profile">
         <div class="profile-photo no-select">
@@ -191,6 +192,15 @@
       </div>
     </section>
 
+    <div id="view-page-user">
+      <div>
+        <a href="/<%=userCustom.user_name_link%>"
+          >linqbio.me/<%= userCustom.user_name_link %></a
+        >
+      </div>
+    </div>
+
+    <!-- formularios -->
     <div id="form-background"></div>
 
     <% if(userCustom.log !== ''){ %>
@@ -219,7 +229,7 @@
 
               <label for="user_picture"
                 ><img
-                  src="./imgs/cat.png"
+                  src="<%= userCustom.user_picture %>"
                   alt="gato desenho"
                   id="preview-image"
                 />
@@ -230,7 +240,7 @@
           <div class="form-group">
             <p>
               AVISO: Por favor, escolha uma <br />
-              foto 1:1 (quadrada)
+              foto quadrada (1:1)
             </p>
           </div>
           <div class="form-group form-buttom">

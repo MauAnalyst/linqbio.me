@@ -382,7 +382,7 @@ section p {
 
 section button {
   border: none;
-  margin-top: 2rem;
+  margin-top: 3rem;
   width: 100%;
   background-color: transparent;
 }
@@ -391,15 +391,65 @@ section button a {
   background-color: var(--color-action-primary);
   width: 100%;
   color: #fff;
-  padding: 1rem;
+  padding: 1rem 2rem;
   font-weight: bold;
+  font-size: 1.3rem;
   border-radius: 1rem;
-  font-size: 1rem;
   transition: all 0.2s ease;
 }
 
 section button a:hover {
   background-color: var(--color-action-primary-hover);
+}
+
+/* copy */
+
+#conteiner-copy {
+  position: relative;
+}
+
+#copy-link {
+  position: relative;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1rem;
+  /* background-color: var(--color-text-primary); */
+}
+
+#copy-link #link {
+  background-color: var(--color-text-primary);
+  color: var(--color-background-primary);
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+}
+
+#copy-link .material-symbols-outlined {
+  background-color: var(--color-action-primary);
+  color: var(--color-background-primary);
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+#msgm-copy {
+  position: absolute;
+  background-color: var(--color-background-primary);
+  background-color: var(--color-text-primary);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.2rem;
+  color: #ffffff;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#msgm-copy.visible {
+  opacity: 1;
 }
 
 /* ------  footer  ------ */

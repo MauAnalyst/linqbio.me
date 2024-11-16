@@ -15,6 +15,21 @@ const auth0Management = new ManagementClient({
   scope: "read:users delete:users",
 });
 
+const DeleteAll = async (req, res) => {
+  try {
+    let deleteAllCustom = await UserCustom.deleteMany({});
+    let deleteAllUser = await LinqbioDb.deleteMany({});
+
+    res.json({
+      msgm: "delete realizado com sucesso",
+      deleteAllCustom,
+      deleteAllUser,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const fastUserCreation = async (req, res) => {
   const { user_name_link } = req.body;
 
@@ -74,7 +89,7 @@ const UserController = async (req, res) => {
 
             if (
               date_pay.getFullYear() !== date_now.getFullYear() ||
-              diffInDays > 30
+              diffInDays > 7
             ) {
               login.reimbursement_status = "Expired";
               await LinqbioDb.findOneAndUpdate(
@@ -94,7 +109,7 @@ const UserController = async (req, res) => {
 
       res.render("index", { log_erro: {}, login });
     } else {
-      res.redirect("/home/g");
+      res.redirect("/h/home");
     }
   } catch (error) {
     console.log(error);
@@ -107,12 +122,12 @@ const DeleteAccount = async (req, res) => {
   try {
     if (user_id !== req.oidc.user.sub) {
       //garantindo se o usuário é o mesmo logado
-      return res.redirect("/home/g");
+      return res.redirect("/h/home");
     }
     const user = await LinqbioDb.findOne({ user_id });
 
     if (
-      reimbursement_status === "Authorized" &&
+      //reimbursement_status === "Authorized" &&
       user.buy_status === "Success"
     ) {
       if (user.reimbursement_status === "In review") {
@@ -124,7 +139,7 @@ const DeleteAccount = async (req, res) => {
 
         if (
           date_now.getFullYear() !== date_pay.getFullYear() ||
-          diffInDays > 30
+          diffInDays > 7
         ) {
           //não realizará o reembolso, pois tentou burlar
           await UserCustom.deleteOne({ user_id });
@@ -203,7 +218,7 @@ const DeleteAccount = async (req, res) => {
     await auth0Management.users.delete({ id: user_id });
     //console.log(`Usuário com ID ${user_id} foi deletado do Auth0 com sucesso.`);
 
-    res.redirect("/home/g");
+    res.redirect("/h/home");
   } catch (error) {
     console.log(error);
   }
@@ -238,7 +253,7 @@ const Payment = async (req, res) => {
     }
   }
 
-  const linkRegex = /^[a-zA-Z0-9_-]{5,15}$/; // Permite letras, números, underscores e hífens, com 3-20 caracteres
+  const linkRegex = /^[a-zA-Z0-9_-]{3,15}$/; // Permite letras, números, underscores e hífens, com 3-20 caracteres
   if (!linkRegex.test(user_name_link)) {
     log_erro.type_erro = "Invalid link";
     log_erro.msgm =
@@ -333,28 +348,33 @@ const CompletedPayment = async (req, res) => {
 
     const user = await LinqbioDb.findOne({ user_id });
 
-    const userCustom = new UserCustom({
-      user_id,
-      user_picture: user.user_picture,
-      user_name_link: user.user_name_link,
-      profile: {
-        user_name: user_name,
-      },
-      links_user: {
-        id_link: uniqueId,
-        link: `https://linqbio.me/${user.user_name_link}`,
-        origin: "linqbio", // TikTok, Instagram, etc.
-        other: "", // Para outras origens, onde o usuário define o nome
-        title: "Meu Linqbio",
-        description: "Veja todas as minhas redes sociais",
-      },
-    });
+    const check_custom = await UserCustom.findOne({ user_id });
 
-    await userCustom.save();
+    if (!check_custom) {
+      const userCustom = new UserCustom({
+        user_id,
+        user_picture: user.user_picture,
+        user_name_link: user.user_name_link,
+        profile: {
+          user_name: user_name,
+        },
+        links_user: {
+          id_link: uniqueId,
+          link: `https://linqbio.me/${user.user_name_link}`,
+          origin: "linqbio", // TikTok, Instagram, etc.
+          other: "", // Para outras origens, onde o usuário define o nome
+          title: "Meu Linqbio",
+          description: "Veja todas as minhas redes sociais",
+        },
+      });
+
+      await userCustom.save();
+    }
 
     let login = {
       user_id: user_id,
       user_name: user_name,
+      user_name_link: `${process.env.AUTH0_BASE_URL}${user.user_name_link}`,
       user_email: user_email,
       user_picture: user.user_picture,
       reimbursement_status: "Authorized",
@@ -403,6 +423,27 @@ const AcessCustom = async (req, res) => {
       res.redirect("/");
     } else {
       const SearchUserCustom = await UserCustom.findOne({ user_id });
+
+      if (user.reimbursement_status === "In review") {
+        const date_now = new Date();
+        const date_pay = new Date(user.date_created_payment);
+
+        const diffInMs = Math.abs(date_now - date_pay);
+        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+        if (
+          date_now.getFullYear() !== date_pay.getFullYear() ||
+          diffInDays > 7
+        ) {
+          login.reimbursement_status = "Expired";
+          await LinqbioDb.findOneAndUpdate(
+            { user_id },
+            { reimbursement_status: "Expired" },
+            { new: true }
+          );
+        } else {
+          login.reimbursement_status = "Authorized";
+        }
+      }
 
       let userCustom = SearchUserCustom;
 
@@ -568,22 +609,16 @@ const UpdateLink = async (req, res) => {
 const ViewPage = async (req, res) => {
   const { user_name_link } = req.params;
 
-  console.log(user_name_link);
-
   try {
-    const user = await LinqbioDb.findOne({ user_name_link });
+    //const user = await LinqbioDb.findOne({ user_name_link });
 
-    const user_id = user.user_id;
-
-    const SearchUserCustom = await UserCustom.findOne({ user_id });
+    const SearchUserCustom = await UserCustom.findOne({ user_name_link });
 
     if (!SearchUserCustom) {
-      return res.json({ msgm: "não encontrou nada meu chapa" });
+      return res.render("status404");
     }
 
     let userCustom = SearchUserCustom;
-
-    console.log(userCustom);
 
     return res.render("viewPage", { userCustom });
   } catch (error) {
@@ -595,6 +630,7 @@ const ViewPage = async (req, res) => {
 //-------------,--------------
 
 export {
+  DeleteAll,
   UserController,
   AcessUser,
   fastUserCreation,

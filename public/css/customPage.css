@@ -368,7 +368,8 @@ header {
 body {
   /* background: linear-gradient(to bottom, #00ffc5, #00cdea); */
   background: linear-gradient(to bottom, #363639, #0e0e0f);
-
+  position: relative;
+  width: 100%;
   min-height: 100dvh;
 }
 
@@ -555,6 +556,33 @@ body {
 .section-view .view-links .info .descri {
   font-size: 0.7rem;
   color: var(--color-text-secondary);
+}
+
+/* visualizar pagina */
+
+#view-page-user {
+  position: fixed;
+  top: 10%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: start;
+  z-index: 3;
+}
+
+#view-page-user div {
+  padding: 2rem 0.5rem;
+}
+
+#view-page-user div a {
+  background-color: var(--color-action-primary);
+  font-weight: bold;
+  color: var(--color-background-primary);
+  padding: 1rem;
+  font-size: 0.7rem;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 /* ------- log de erro ---------- */
@@ -746,7 +774,7 @@ footer p {
 
 /* From Uiverse.io by Praashoo7 */
 #loading {
-  z-index: 5;
+  z-index: 10;
   position: fixed;
   top: 0;
   right: 0;
