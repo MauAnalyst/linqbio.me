@@ -14,6 +14,8 @@ import {
   UpdateBackground,
   UpdateLink,
   ViewPage,
+  AcessHelp,
+  sendHelp,
 } from "../controllers/linqbioController.js";
 
 const app = express();
@@ -43,10 +45,12 @@ router.post("/user/delete-account", requiresAuth(), DeleteAccount);
 //custom user
 router.get("/user/dashboard", requiresAuth(), AcessUser);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
+router.get("/user/help", requiresAuth(), AcessHelp);
 
 router.post("/user/update-profile", UpdateProfile);
 router.post("/user/update-background", UpdateBackground);
 router.post("/user/update-link", UpdateLink);
+router.post("/user/help-me", sendHelp);
 
 router.get("/:user_name_link", ViewPage);
 

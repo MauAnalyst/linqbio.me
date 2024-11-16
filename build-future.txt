@@ -1,0 +1,1 @@
+build: deixar a parte do ajuda como se fosse uma conversa em um chat

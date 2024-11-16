@@ -398,7 +398,7 @@ const AcessUser = async (req, res) => {
   }
 };
 
-//custom page
+//------------------ custom page
 const AcessCustom = async (req, res) => {
   const user_id = req.oidc.user.sub;
 
@@ -627,6 +627,47 @@ const ViewPage = async (req, res) => {
   }
 };
 
+// help page
+
+const AcessHelp = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+
+  try {
+    const user = await LinqbioDb.findOne({ user_id });
+    if (!user) {
+      return res.redirect("/");
+    }
+    let login = {
+      user_id: user.user_id,
+      user_name: user.user_name,
+      user_email: user.user_email,
+      user_picture: user.user_picture,
+      buy_status: user.buy_status,
+      reimbursement_status: user.reimbursement_status,
+    };
+
+    return res.render("help", { login });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao buscar dados" });
+  }
+};
+
+const sendHelp = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+  const { title, description } = req.body;
+
+  try {
+    const user = await LinqbioDb.findOne({ user_id });
+    console.log("email enviado", user.user_email);
+    console.log(title, description);
+    res.redirect("/user/help");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao enviar dados" });
+  }
+};
+
 //-------------,--------------
 
 export {
@@ -642,6 +683,8 @@ export {
   UpdateBackground,
   UpdateLink,
   ViewPage,
+  AcessHelp,
+  sendHelp,
 };
 
 //modelo
