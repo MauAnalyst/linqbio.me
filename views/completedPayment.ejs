@@ -17,10 +17,10 @@
         <h1><a href="/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/view-page">Visualizar Page</a></li>
-            <li><a href="/custom-page">Personalizar</a></li>
-            <li><a href="/configs">Configurações</a></li>
+            <li><a href="/user/dashboard">Dashboard</a></li>
+            <li><a href="/user/view-page">Visualizar Page</a></li>
+            <li><a href="/user/custom-page">Personalizar</a></li>
+            <li><a href="/user/configs">Configurações</a></li>
           </ul>
           <div>
             <a class="user-icon">
@@ -57,10 +57,10 @@
       </div>
       <div id="items-menu-resp">
         <ul>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/view-page">Visualizar Page</a></li>
-          <li><a href="/custom-page">Personalizar</a></li>
-          <li><a href="/configs">Configurações</a></li>
+          <li><a href="/user/dashboard">Dashboard</a></li>
+          <li><a href="/user/view-page">Visualizar Page</a></li>
+          <li><a href="/user/custom-page">Personalizar</a></li>
+          <li><a href="/user/configs">Configurações</a></li>
         </ul>
       </div>
     </header>
@@ -77,7 +77,11 @@
           >
           <br />
         </p>
-        <form action="/delete-account" class="actions-buttons" method="post">
+        <form
+          action="/user/delete-account"
+          class="actions-buttons"
+          method="post"
+        >
           <input
             type="hidden"
             id="user_id"
@@ -100,7 +104,7 @@
     <section class="section-success">
       <h1>Pagamento confirmado, <%= login.user_name %>!!</h1>
       <p>Comece personalizando sua page:</p>
-      <button><a href="/custom-page">Persolizar Page</a></button>
+      <button><a href="/user/custom-page">Persolizar Page</a></button>
     </section>
 
     <div id="loading">

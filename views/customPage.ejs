@@ -18,10 +18,12 @@
         <h1><a href="/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
-            <li><a href="/dashboard" id="dashboard">Dashboard</a></li>
-            <li><a href="/custom-page" id="custom-page">Personalizar</a></li>
-            <li><a href="/help" id="help">Help</a></li>
-            <li><a href="/configs" id="configs">Configurações</a></li>
+            <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
+            <li>
+              <a href="/user/custom-page" id="custom-page">Personalizar</a>
+            </li>
+            <li><a href="/user/help" id="help">Help</a></li>
+            <li><a href="/user/configs" id="configs">Configurações</a></li>
           </ul>
           <div>
             <a class="user-icon">
@@ -61,10 +63,10 @@
       </div>
       <div id="items-menu-resp">
         <ul>
-          <li><a href="/dashboard" id="dashboard">Dashboard</a></li>
-          <li><a href="/custom-page" id="custom-page">Personalizar</a></li>
-          <li><a href="/help" id="help">Help</a></li>
-          <li><a href="/configs" id="configs">Configurações</a></li>
+          <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
+          <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
+          <li><a href="/user/help" id="help">Help</a></li>
+          <li><a href="/user/configs" id="configs">Configurações</a></li>
         </ul>
       </div>
     </header>
@@ -101,7 +103,11 @@
         </p>
         <% } %>
 
-        <form action="/delete-account" class="actions-buttons" method="post">
+        <form
+          action="/user/delete-account"
+          class="actions-buttons"
+          method="post"
+        >
           <input
             type="hidden"
             id="user_id"
@@ -162,7 +168,7 @@
             >
             <span class="icon">
               <img
-                src="<%= `./imgs/icones/${element.origin}.svg` %>"
+                src="<%= `/imgs/icones/${element.origin}.svg` %>"
                 alt="<%= element.origin %>"
             /></span>
             <span class="info">
@@ -200,7 +206,7 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Editar Foto de Perfil</h1>
-        <form action="/update-picture" enctype="multipart/form-data">
+        <form action="/user/update-picture" enctype="multipart/form-data">
           <div class="form-group">
             <div class="update-picture">
               <input
@@ -242,7 +248,7 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Editar Perfil</h1>
-        <form id="update-profile" action="/update-profile" method="post">
+        <form id="update-profile" action="/user/update-profile" method="post">
           <div class="form-group">
             <label for="user_name">Nome de usuário:</label>
             <input
@@ -279,7 +285,7 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Editar Fundo/Tema</h1>
-        <form action="/update-background" method="post">
+        <form action="/user/update-background" method="post">
           <div class="ajust-form">
             <div class="form-group form-group-theme">
               <div class="form-sub-group">
@@ -350,7 +356,7 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Adicionar ou Editar Link</h1>
-        <form id="add-link" action="/update-link" method="post">
+        <form id="add-link" action="/user/update-link" method="post">
           <input type="hidden" id="id_link" name="id_link" value="" />
           <div class="form-group">
             <label for="link">Seu link:</label>
@@ -434,8 +440,8 @@
       </svg>
     </div>
 
-    <script src="./js/menu.js"></script>
-    <script src="./js/profile.js"></script>
-    <script src="./js/customPage.js"></script>
+    <script src="/js/menu.js"></script>
+    <script src="/js/profile.js"></script>
+    <script src="/js/customPage.js"></script>
   </body>
 </html>

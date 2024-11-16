@@ -19,6 +19,8 @@ const LinqbioSchema = new Schema({
 
 const UserCustomSchema = new Schema({
   user_id: { type: String, required: true },
+  user_name_link: { type: String, required: true },
+  user_picture: { type: String, required: true },
   profile: {
     user_name: { type: String, required: true },
     user_description: {

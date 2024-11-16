@@ -15,31 +15,33 @@ import {
   ViewPage,
 } from "../controllers/linqbioController.js";
 
+const app = express();
 const router = express.Router();
 const { requiresAuth } = auth0;
 
-router.get("/home", (req, res) => {
+app.use(express.static("public"));
+
+router.get("/home/g", (req, res) => {
   res.render("home");
 });
-router.post("/create-account", fastUserCreation);
+router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
-router.get("/:user_name_link", ViewPage);
-
-//authorized routes
-router.use(requiresAuth());
+//router.get("/:user_name_link", ViewPage);
 
 //payment
-router.post("/checkout", Payment);
-router.get("/complete", CompletedPayment);
+router.post("/user/checkout", requiresAuth(), Payment);
+router.get("/user/complete", requiresAuth(), CompletedPayment);
 
-router.post("/delete-account", DeleteAccount);
+router.post("/user/delete-account", requiresAuth(), DeleteAccount);
 
 //custom user
-router.get("/dashboard", requiresAuth(), AcessUser);
-router.get("/custom-page", requiresAuth(), AcessCustom);
+router.get("/user/dashboard", requiresAuth(), AcessUser);
+router.get("/user/custom-page", requiresAuth(), AcessCustom);
 
-router.post("/update-profile", UpdateProfile);
-router.post("/update-background", UpdateBackground);
-router.post("/update-link", UpdateLink);
+router.post("/user/update-profile", UpdateProfile);
+router.post("/user/update-background", UpdateBackground);
+router.post("/user/update-link", UpdateLink);
+
+router.get("/:user_name_link", ViewPage);
 
 export { router };

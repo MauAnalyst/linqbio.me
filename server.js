@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import { router } from "./routes/index.js";
 import auth0 from "express-openid-connect";
@@ -20,25 +21,10 @@ const config = {
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
 };
 
-app.set("view engine", "ejs");
-
-// Middleware para tratamento de erros
-app.use((err, req, res, next) => {
-  if (process.env.NODE_ENV === "development") {
-    console.error(err);
-    return res.status(500).send(err.message);
-  }
-
-  console.error(err);
-  res.status(500).render("error", {
-    message: "Ocorreu um erro, tente novamente mais tarde.",
-  });
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
+app.set("view engine", "ejs");
 app.use(cookieParser());
 
 // autenticação Auth0

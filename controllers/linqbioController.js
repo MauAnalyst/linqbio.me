@@ -94,7 +94,7 @@ const UserController = async (req, res) => {
 
       res.render("index", { log_erro: {}, login });
     } else {
-      res.redirect("/home");
+      res.redirect("/home/g");
     }
   } catch (error) {
     console.log(error);
@@ -107,7 +107,7 @@ const DeleteAccount = async (req, res) => {
   try {
     if (user_id !== req.oidc.user.sub) {
       //garantindo se o usuário é o mesmo logado
-      return res.redirect("/home");
+      return res.redirect("/home/g");
     }
     const user = await LinqbioDb.findOne({ user_id });
 
@@ -203,7 +203,7 @@ const DeleteAccount = async (req, res) => {
     await auth0Management.users.delete({ id: user_id });
     //console.log(`Usuário com ID ${user_id} foi deletado do Auth0 com sucesso.`);
 
-    res.redirect("/home");
+    res.redirect("/home/g");
   } catch (error) {
     console.log(error);
   }
@@ -259,7 +259,7 @@ const Payment = async (req, res) => {
       },
     ],
     mode: "payment",
-    success_url: `${process.env.AUTH0_BASE_URL}complete?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${process.env.AUTH0_BASE_URL}user/complete?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.AUTH0_BASE_URL}`,
   };
 
@@ -335,6 +335,8 @@ const CompletedPayment = async (req, res) => {
 
     const userCustom = new UserCustom({
       user_id,
+      user_picture: user.user_picture,
+      user_name_link: user.user_name_link,
       profile: {
         user_name: user_name,
       },
@@ -459,7 +461,7 @@ const UpdateProfile = async (req, res) => {
     );
 
     //return res.render("customPage", { userCustom, login });
-    res.redirect("/custom-page");
+    res.redirect("/user/custom-page");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erro ao atualizar o perfil" });
@@ -482,7 +484,7 @@ const UpdateBackground = async (req, res) => {
       { new: true }
     );
 
-    return res.redirect("/custom-page");
+    return res.redirect("/user/custom-page");
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao atualizar tema" });
@@ -556,7 +558,7 @@ const UpdateLink = async (req, res) => {
         );
       }
     }
-    return res.redirect("/custom-page");
+    return res.redirect("/user/custom-page");
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
@@ -565,10 +567,28 @@ const UpdateLink = async (req, res) => {
 
 const ViewPage = async (req, res) => {
   const { user_name_link } = req.params;
+
+  console.log(user_name_link);
+
   try {
+    const user = await LinqbioDb.findOne({ user_name_link });
+
+    const user_id = user.user_id;
+
+    const SearchUserCustom = await UserCustom.findOne({ user_id });
+
+    if (!SearchUserCustom) {
+      return res.json({ msgm: "não encontrou nada meu chapa" });
+    }
+
+    let userCustom = SearchUserCustom;
+
+    console.log(userCustom);
+
+    return res.render("viewPage", { userCustom });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
+    res.status(500).json({ error: "Usuário não encontrado" });
   }
 };
 

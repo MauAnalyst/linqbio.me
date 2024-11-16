@@ -104,7 +104,7 @@
         </p>
         <% } %>
 
-        <form action="/delete-account" class="actions-buttons" method="post">
+        <form action="/user/delete-account" class="actions-buttons" method="post">
           <input
             type="hidden"
             id="user_id"
@@ -137,10 +137,10 @@
       <img src="./imgs/socialMedia.png" alt="desenho social media" />
 
       <div class="redirect-options">
-        <a href="/dashboard">Dashboard</a>
-        <a href="/custom-page">Personalizar</a>
-        <a href="/view-page">Visualizar Page</a>
-        <a href="/configs">Configurações</a>
+        <a href="/user/dashboard">Dashboard</a>
+        <a href="/user/custom-page">Personalizar</a>
+        <a href="/user/view-page">Visualizar Page</a>
+        <a href="/user/configs">Configurações</a>
       </div>
     </section>
     <% } else {%>
@@ -149,7 +149,7 @@
     <section class="section-auth-no-plan">
       <h1>Você está quase lá, <%= login.user_name %>.</h1>
       
-      <form action="/checkout" method="post">
+      <form action="/user/checkout" method="post">
         <input
           type="hidden"
           id="user_id"
