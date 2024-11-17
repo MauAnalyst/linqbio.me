@@ -133,27 +133,41 @@
       <h1>Dashboard</h1>
       <div class="container">
         <div class="container-group">
-          <h3>Acessos Hoje <br /><span>17/11/2024</span></h3>
-          <h2>25</h2>
+          <h3>
+            Acessos diários<br /><span
+              ><%= `${overview.day_reference}/${overview.mother_reference}`
+              %></span
+            >
+          </h3>
+          <h2><%= overview.access_today %></h2>
         </div>
         <div class="container-group">
-          <h3>Acessos Mês Atual <br /><span>11/2024</span></h3>
-          <h2>340</h2>
+          <h3>
+            Acessos Mês Atual <br /><span
+              ><%= overview.mother_reference %></span
+            >
+          </h3>
+          <h2><%= overview.access_mother %></h2>
         </div>
         <div class="container-group">
-          <h3>Cliques Totais <br /><span>11/2024</span></h3>
-          <h2>250</h2>
+          <h3>
+            Cliques Totais <br /><span><%= overview.mother_reference %></span>
+          </h3>
+          <h2>
+            <%= overview.click_links.reduce((total, i) => total +
+            i.click_mother, 0 ) %>
+          </h2>
         </div>
         <div class="container-group">
           <h3>
             Cliques por Links <br />
-            <span>11/2024</span>
+            <span><%= overview.mother_reference %></span>
           </h3>
-          <h4>instagram - 120</h4>
-          <h4>tiktok - 540</h4>
-          <h4>behance - 120</h4>
-          <h4>telegram - 120</h4>
-          <h4>whatsapp - 120</h4>
+          <% overview.click_links.forEach((e, i) => { %>
+          <h4>
+            <%= `${userCustom.links_user[i].origin} - ${e.click_mother}` %>
+          </h4>
+          <% }) %>
         </div>
       </div>
     </section>

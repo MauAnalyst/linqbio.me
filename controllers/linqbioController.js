@@ -20,11 +20,13 @@ const DeleteAll = async (req, res) => {
   try {
     let deleteAllCustom = await UserCustom.deleteMany({});
     let deleteAllUser = await LinqbioDb.deleteMany({});
+    let deleteAllOvervow = await OverviewDb.deleteMany({});
 
     res.json({
       msgm: "delete realizado com sucesso",
       deleteAllCustom,
       deleteAllUser,
+      deleteAllOvervow,
     });
   } catch (error) {
     console.log(error);
@@ -75,6 +77,7 @@ const UserController = async (req, res) => {
 
         await user.save();
       } else {
+        login.user_name_link = user.user_name_link;
         login.user_name = user.user_name;
         if (user.buy_status === "Success") {
           login.buy_status = "Success";
@@ -217,7 +220,6 @@ const DeleteAccount = async (req, res) => {
     }
 
     await auth0Management.users.delete({ id: user_id });
-    //console.log(`Usuário com ID ${user_id} foi deletado do Auth0 com sucesso.`);
 
     res.redirect("/h/home");
   } catch (error) {
@@ -371,7 +373,7 @@ const CompletedPayment = async (req, res) => {
 
       await userCustom.save();
 
-      const date_now = new Date().getDay();
+      const date_now = new Date().getDate();
       const mother_now = new Date().getMonth();
       const year_now = new Date().getFullYear();
 
@@ -406,7 +408,31 @@ const AcessDashboard = async (req, res) => {
   const user_id = req.oidc.user.sub;
 
   try {
-    //res.render("dashboard", { user_name });
+    const user = await LinqbioDb.findOne({ user_id });
+    if (!user) {
+      return res.redirect("/");
+    }
+
+    let login = {
+      user_id: user.user_id,
+      user_name: user.user_name,
+      user_email: user.user_email,
+      user_picture: user.user_picture,
+      buy_status: user.buy_status,
+      reimbursement_status: user.reimbursement_status,
+    };
+
+    const userCustom = await UserCustom.findOne({ user_id });
+    if (!userCustom) {
+      console.log("erro ao consultar dados");
+    }
+
+    const overview = await OverviewDb.findOne({ user_id });
+    if (!overview) {
+      console.log("erro ao consultar dados");
+    }
+
+    res.render("dashboard", { login, userCustom, overview });
   } catch (error) {
     console.log(error);
   }
@@ -643,17 +669,73 @@ const UpdateLink = async (req, res) => {
 
 const ViewPage = async (req, res) => {
   const { user_name_link } = req.params;
+  const day_now = new Date().getDate();
+  const mother_now = new Date().getMonth();
+  const year_now = new Date().getFullYear();
+  const date_now = `${mother_now + 1}/${year_now}`;
 
   try {
-    //const user = await LinqbioDb.findOne({ user_name_link });
-
     const SearchUserCustom = await UserCustom.findOne({ user_name_link });
 
     if (!SearchUserCustom) {
       return res.render("status404");
     }
-
     let userCustom = SearchUserCustom;
+
+    const user_id = SearchUserCustom.user_id;
+    const overview = await OverviewDb.findOne({ user_id });
+
+    if (!overview) {
+      console.error(
+        `Nenhum documento de overview encontrado para o user_id: ${user_id}`
+      );
+      return res.render("status404");
+    }
+
+    if (date_now !== overview.mother_reference) {
+      //reiniciando do acesso mensal
+      await OverviewDb.findOneAndUpdate(
+        { user_id },
+        {
+          $set: {
+            mother_reference: date_now,
+            day_reference: `${day_now}`,
+            access_today: 1,
+            access_mother: 1,
+          },
+        },
+        { new: true }
+      );
+    } else {
+      if (day_now.toString() !== overview.day_reference) {
+        //se o dias forem diferente, reinicia a contagem do dia e depois atualiza o dia
+        await OverviewDb.findOneAndUpdate(
+          { user_id },
+          {
+            $set: {
+              day_reference: `${day_now}`,
+              access_today: 1,
+            },
+            $inc: {
+              access_mother: 1,
+            },
+          },
+          { new: true }
+        );
+      } else {
+        //caso o dia seja o mesmo, apenas incrementa
+        await OverviewDb.findOneAndUpdate(
+          { user_id },
+          {
+            $inc: {
+              access_today: 1,
+              access_mother: 1,
+            },
+          },
+          { new: true }
+        );
+      }
+    }
 
     return res.render("viewPage", { userCustom });
   } catch (error) {
@@ -680,6 +762,8 @@ const AcessHelp = async (req, res) => {
       buy_status: user.buy_status,
       reimbursement_status: user.reimbursement_status,
     };
+
+    //feat: validar-reembolso
 
     return res.render("help", { login });
   } catch (error) {
@@ -708,56 +792,54 @@ const sendHelp = async (req, res) => {
 
 const TrackLink = async (req, res) => {
   const { id_link } = req.body;
-  const day_now = new Date().getDay();
+  const day_now = new Date().getDate();
   const mother_now = new Date().getMonth();
   const year_now = new Date().getFullYear();
   const date_now = `${mother_now + 1}/${year_now}`;
 
   try {
     const link = await OverviewDb.findOne({ "click_links.id_link": id_link });
-    let result;
 
     if (link.mother_reference !== date_now) {
-      console.log(link.mother_reference);
-      console.log(date_now);
-      result = "mm/aaaa diferentes";
-      await OverviewDb.updateOne(
+      await OverviewDb.findOneAndUpdate(
         { "click_links.id_link": id_link },
         {
           $set: {
+            mother_reference: date_now,
             "click_links.$.click_today": 1,
             "click_links.$.click_mother": 1,
           },
-        }
+        },
+        { new: true }
       );
     } else {
+      //caso os meses sejam iguais mas o dia não
       if (link.day_reference !== day_now.toString()) {
-        result = "dias diferentes";
-        await OverviewDb.updateOne(
+        await OverviewDb.findOneAndUpdate(
           { "click_links.id_link": id_link },
           {
             $set: {
+              day_reference: day_now,
               "click_links.$.click_today": 1,
             },
             $inc: {
+              "click_links.$.click_mother": 1,
+            },
+          },
+          { new: true }
+        );
+      } else {
+        await OverviewDb.updateOne(
+          { "click_links.id_link": id_link },
+          {
+            $inc: {
+              "click_links.$.click_today": 1,
               "click_links.$.click_mother": 1,
             },
           }
         );
-      } else {
-        result = "datas iguais";
-        await OverviewDb.updateOne(
-          { "click_links.id_link": id_link },
-          {
-            $inc: {
-              "click_links.$.click_today": 1,
-              "click_links.$.click_mother": 1,
-            },
-          } // Incrementa o campo click_today
-        );
       }
     }
-    console.log(result);
     // Retorna sucesso
     res.status(200).json({ message: "Clique registrado com sucesso!" });
   } catch (error) {

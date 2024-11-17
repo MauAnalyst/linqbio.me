@@ -50,8 +50,8 @@ const OverviewSchema = new Schema({
   user_id: { type: String, required: true },
   mother_reference: { type: String, default: "" },
   day_reference: { type: String, default: "" },
-  access_today: { type: String, default: 0 },
-  access_mother: { type: String, default: 0 },
+  access_today: { type: Number, default: 0 },
+  access_mother: { type: Number, default: 0 },
   click_links: [
     {
       id_link: { type: String, required: true },
