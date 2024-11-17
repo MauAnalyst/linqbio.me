@@ -387,13 +387,11 @@ const CompletedPayment = async (req, res) => {
   }
 };
 
-const AcessUser = async (req, res) => {
-  const user_name = req.oidc.user.name;
+const AcessDashboard = async (req, res) => {
   const user_id = req.oidc.user.sub;
-  const user_email = req.oidc.user.email;
 
   try {
-    res.render("dashboard", { user_name });
+    //res.render("dashboard", { user_name });
   } catch (error) {
     console.log(error);
   }
@@ -677,7 +675,7 @@ const sendHelp = async (req, res) => {
 export {
   DeleteAll,
   UserController,
-  AcessUser,
+  AcessDashboard,
   fastUserCreation,
   DeleteAccount,
   Payment,

@@ -3,36 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linqbio - Página Inicial</title>
+    <title>Linqbio | Dashboard</title>
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/completedPayment.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogout"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogoutandaddandedit"
     />
   </head>
   <body>
     <header>
       <div class="navbar">
-        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <h1><a href="/h/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/view-page">Visualizar Page</a></li>
-            <li><a href="/custom-page">Personalizar</a></li>
-            <li><a href="/configs">Configurações</a></li>
+            <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
+            <li>
+              <a href="/user/custom-page" id="custom-page">Personalizar</a>
+            </li>
+            <li><a href="/user/help" id="help">Ajuda</a></li>
+            <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
           </ul>
           <div>
             <a class="user-icon">
               <img src="<%= login.user_picture %>" alt="gato desenhado" />
+              <!-- <img src="./imgs/cat.png" alt="" /> -->
               <span class="material-symbols-outlined">arrow_drop_down</span></a
             >
             <div class="logged-user">
               <div class="profile">
                 <img src="<%= login.user_picture %>" alt="gato desenho" />
+                <!-- <img src="./imgs/cat.png" alt="" /> -->
                 <div class="profile-info">
                   <p><%= login.user_name %></p>
                   <p><%= login.user_email %></p>
+                  <!-- <p>name user</p>
+                  <p>exemple@gmail.com</p> -->
                 </div>
               </div>
               <div class="sign-out">
@@ -51,16 +58,15 @@
             <span class="material-symbols-outlined no-select" id="icon"
               >menu</span
             >
-            <!-- <span class="material-symbols-outlined">close</span> -->
           </div>
         </nav>
       </div>
       <div id="items-menu-resp">
         <ul>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/view-page">Visualizar Page</a></li>
-          <li><a href="/custom-page">Personalizar</a></li>
-          <li><a href="/configs">Configurações</a></li>
+          <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
+          <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
+          <li><a href="/user/help" id="help">Help</a></li>
+          <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
         </ul>
       </div>
     </header>
@@ -68,7 +74,10 @@
     <div id="delete-account">
       <div class="conteiner-delete">
         <h2>Aaaaah nããooooo</h2>
-        <img src="./imgs/bored.png" alt="gato triste" />
+        <img src="/imgs/bored.png" alt="gato triste" />
+
+        <% if(login.buy_status === 'Success'){ %> <% if(
+        login.reimbursement_status === 'Authorized' ){ %>
         <p>
           Poxa, tem certeza que deseja <br />
           deletar sua conta ? <br />
@@ -77,7 +86,28 @@
           >
           <br />
         </p>
-        <form action="/delete-account" class="actions-buttons" method="post">
+        <% } else {%>
+        <p>
+          Poxa, tem certeza que deseja <br />
+          deletar sua conta ? <br />
+          <span class="warning"
+            >você não terá direito ao reembolso, <br />
+            pois a compra foi efeutada a mais de 7 dias.</span
+          >
+          <br />
+        </p>
+        <% } %> <% } else { %>
+        <p>
+          Poxa, você tem certeza que deseja <br />
+          deletar usa conta ?
+        </p>
+        <% } %>
+
+        <form
+          action="/user/delete-account"
+          class="actions-buttons"
+          method="post"
+        >
           <input
             type="hidden"
             id="user_id"
@@ -97,17 +127,59 @@
       </div>
     </div>
 
-    <section class="section-dash">
+    <!-- sections -->
+
+    <section class="section-dashboard">
       <h1>Dashboard</h1>
-      <h2>Bem vindo <%= login.user_name %></h2>
+      <div class="container">
+        <div class="container-group">
+          <h3>Acessos Hoje <br /><span>17/11/2024</span></h3>
+          <h2>25</h2>
+        </div>
+        <div class="container-group">
+          <h3>Acessos Mês Atual <br /><span>11/2024</span></h3>
+          <h2>340</h2>
+        </div>
+        <div class="container-group">
+          <h3>Cliques Totais <br /><span>11/2024</span></h3>
+          <h2>250</h2>
+        </div>
+        <div class="container-group">
+          <h3>
+            Cliques por Links <br />
+            <span>11/2024</span>
+          </h3>
+          <h4>instagram - 120</h4>
+          <h4>tiktok - 540</h4>
+          <h4>behance - 120</h4>
+          <h4>telegram - 120</h4>
+          <h4>whatsapp - 120</h4>
+        </div>
+      </div>
     </section>
 
-    <footer>
-      <p>Desenvolvido por Mauricio Brito dos Santos</p>
-      <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
-    </footer>
+    <!-- footer -->
 
-    <script src="./js/menu.js"></script>
-    <script src="./js/profile.js"></script>
+    <div class="footer">
+      <footer>
+        <p>Desenvolvido por Mauricio Brito dos Santos</p>
+        <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
+      </footer>
+    </div>
+
+    <div id="loading">
+      <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+      </svg>
+    </div>
+
+    <script src="/js/menu.js"></script>
+    <script src="/js/profile.js"></script>
+    <script>
+      //const send = document.querySelector("#send");
+      //send.addEventListener("click", () => {
+      //  document.querySelector("#loading").style.display = "flex";
+      //});
+    </script>
   </body>
 </html>

@@ -4,7 +4,7 @@ import auth0 from "express-openid-connect";
 import {
   DeleteAll,
   UserController,
-  AcessUser,
+  AcessDashboard,
   fastUserCreation,
   DeleteAccount,
   Payment,
@@ -42,8 +42,8 @@ router.get("/user/complete", requiresAuth(), CompletedPayment);
 
 router.post("/user/delete-account", requiresAuth(), DeleteAccount);
 
-//custom user
-router.get("/user/dashboard", requiresAuth(), AcessUser);
+//user account
+router.get("/user/dashboard", requiresAuth(), AcessDashboard);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
 router.get("/user/help", requiresAuth(), AcessHelp);
 
