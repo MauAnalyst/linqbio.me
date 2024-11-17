@@ -1,4 +1,5 @@
 import { LinqbioDb, UserCustom } from "../models/linqbioDB.js";
+import { sendEmail } from "./sendEmail.js";
 import { ManagementClient } from "auth0";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
@@ -659,8 +660,11 @@ const sendHelp = async (req, res) => {
 
   try {
     const user = await LinqbioDb.findOne({ user_id });
-    console.log("email enviado", user.user_email);
-    console.log(title, description);
+
+    const recipient = "mau.analyst@gmail.com";
+    const origin = `${user.user_name} - ${user.user_email}`;
+
+    sendEmail(recipient, origin, title, description);
     res.redirect("/user/help");
   } catch (error) {
     console.log(error);
