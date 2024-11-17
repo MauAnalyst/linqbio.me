@@ -46,6 +46,19 @@ const UserCustomSchema = new Schema({
   log: { type: String, default: "" },
 });
 
+const OverviewSchema = new Schema({
+  user_id: { type: String, required: true },
+  access_today: { type: String, required: false },
+  access_mother: { type: String, required: false },
+  click_links: [
+    {
+      id_link: { type: String, required: true },
+      click_today: { type: Number, required: false },
+      click_mother: { type: Number, required: false },
+    },
+  ],
+});
+
 // const LinksUserSchema = new Schema({
 //   user_id: { type: String, required: true },
 //   links_user: {
@@ -77,5 +90,6 @@ const UserCustomSchema = new Schema({
 
 const LinqbioDb = mongoose.model("LinqbioDb", LinqbioSchema);
 const UserCustom = mongoose.model("UserCustom", UserCustomSchema);
+const OverviewDb = mongoose.model("OverviewDb", OverviewSchema);
 
-export { LinqbioDb, UserCustom };
+export { LinqbioDb, UserCustom, OverviewDb };

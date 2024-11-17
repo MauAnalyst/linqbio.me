@@ -1,4 +1,4 @@
-import { LinqbioDb, UserCustom } from "../models/linqbioDB.js";
+import { LinqbioDb, UserCustom, OverviewDb } from "../models/linqbioDB.js";
 import { sendEmail } from "./sendEmail.js";
 import { ManagementClient } from "auth0";
 import { v4 as uuidv4 } from "uuid";
@@ -370,6 +370,15 @@ const CompletedPayment = async (req, res) => {
       });
 
       await userCustom.save();
+
+      const overview = new OverviewDb({
+        user_id,
+        click_links: {
+          id_link: uniqueId,
+        },
+      });
+
+      await overview.save();
     }
 
     let login = {
@@ -572,12 +581,33 @@ const UpdateLink = async (req, res) => {
           },
           { new: true }
         );
+
+        await OverviewDb.findOneAndUpdate(
+          { user_id },
+          {
+            $push: {
+              click_links: {
+                id_link: uniqueId,
+              },
+            },
+          },
+          { new: true }
+        );
       } else if (action_link === "delete") {
         await UserCustom.findOneAndUpdate(
           { user_id },
           {
             $pull: {
               links_user: { id_link: id_link },
+            },
+          },
+          { new: true }
+        );
+        await OverviewDb.findOneAndUpdate(
+          { user_id },
+          {
+            $pull: {
+              click_links: { id_link: id_link },
             },
           },
           { new: true }
