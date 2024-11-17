@@ -18,6 +18,9 @@
         <h1><a href="/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
+            <% if (login.affiliate === true){ %>
+              <li><a href="/affiliate/dashboard">Afiliados</a></li>
+            <% } %>
             <li><a href="/h/home#exemples">Exemplos</a></li>
             <li><a href="/h/home#howWorks">Como Funciona</a></li>
             <li><a href="/h/home#pricing">Preços</a></li>
@@ -67,6 +70,9 @@
       </div>
       <div id="items-menu-resp">
         <ul>
+          <% if (login.affiliate === true){ %>
+            <li><a href="/affiliate/dashboard">Afiliados</a></li>
+          <% } %>
           <li><a href="/h/home#exemples" class="no-select">Exemplos</a></li>
           <li><a href="/h/home#howWorks" class="no-select">Como Funciona</a></li>
           <li><a href="/h/home#pricing" class="no-select">Preços</a></li>

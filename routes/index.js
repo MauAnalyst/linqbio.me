@@ -1,8 +1,8 @@
 import express from "express";
 import auth0 from "express-openid-connect";
-//import session from "express-session";
 import {
-  DeleteAll,
+  cadAffiliate,
+  EnvCadAff,
   UserController,
   AcessDashboard,
   fastUserCreation,
@@ -25,7 +25,8 @@ const { requiresAuth } = auth0;
 
 app.use(express.static("public"));
 
-router.get("/config/deleteCustm", DeleteAll);
+router.get("/config/linqbio", requiresAuth(), cadAffiliate);
+router.post("/configs/action-cad", requiresAuth(), EnvCadAff);
 
 router.get("/h/home", (req, res) => {
   res.render("home");
@@ -35,7 +36,6 @@ router.get("/h/not-found", (req, res) => {
 });
 router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
-//router.get("/:user_name_link", ViewPage);
 
 //payment
 router.post("/user/checkout", requiresAuth(), Payment);

@@ -61,6 +61,17 @@ const OverviewSchema = new Schema({
   ],
 });
 
+const affiliateSchema = new Schema({
+  user_email: { type: String, required: true },
+  coupon: { type: String, required: true },
+  sales: { type: Number, default: 0 },
+  client_sales: [
+    {
+      id_client: { type: String, required: false },
+    },
+  ],
+});
+
 // const LinksUserSchema = new Schema({
 //   user_id: { type: String, required: true },
 //   links_user: {
@@ -93,5 +104,6 @@ const OverviewSchema = new Schema({
 const LinqbioDb = mongoose.model("LinqbioDb", LinqbioSchema);
 const UserCustom = mongoose.model("UserCustom", UserCustomSchema);
 const OverviewDb = mongoose.model("OverviewDb", OverviewSchema);
+const AffiliateDb = mongoose.model("affiliateSchema", affiliateSchema);
 
-export { LinqbioDb, UserCustom, OverviewDb };
+export { LinqbioDb, UserCustom, OverviewDb, AffiliateDb };

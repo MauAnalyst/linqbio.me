@@ -1,4 +1,9 @@
-import { LinqbioDb, UserCustom, OverviewDb } from "../models/linqbioDB.js";
+import {
+  LinqbioDb,
+  UserCustom,
+  OverviewDb,
+  AffiliateDb,
+} from "../models/linqbioDB.js";
 import { sendEmail } from "./sendEmail.js";
 import { ManagementClient } from "auth0";
 import { v4 as uuidv4 } from "uuid";
@@ -16,20 +21,44 @@ const auth0Management = new ManagementClient({
   scope: "read:users delete:users",
 });
 
-const DeleteAll = async (req, res) => {
+const cadAffiliate = async (req, res) => {
+  const email = req.oidc.user.email;
   try {
-    let deleteAllCustom = await UserCustom.deleteMany({});
-    let deleteAllUser = await LinqbioDb.deleteMany({});
-    let deleteAllOvervow = await OverviewDb.deleteMany({});
-
-    res.json({
-      msgm: "delete realizado com sucesso",
-      deleteAllCustom,
-      deleteAllUser,
-      deleteAllOvervow,
-    });
+    if (email !== "maufinancas@gmail.com") {
+      return res.redirect("/"); // Usar return para garantir que não haja mais execução
+    }
+    // Se o email for o correto
+    res.send(
+      '<h1>Bem-vindo senhor</h1> <form action="/configs/action-cad" method="post"><label for="user_email">Email</label> <input type="email" id="user_email" name="user_email"> <input type="text" id="coupon" name="coupon">  <button type="submit">Cadastrar</button> </form>'
+    );
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Erro ao processar a requisição" });
+  }
+};
+
+const EnvCadAff = async (req, res) => {
+  const { user_email, coupon } = req.body;
+  try {
+    const user_aff = await LinqbioDb.findOne({ user_email });
+
+    if (!user_aff) {
+      return res.redirect("/"); // Usar return para garantir que a execução pare aqui
+    }
+
+    // Se o usuário for encontrado, cria o novo registro
+    const create = new AffiliateDb({
+      user_email,
+      coupon,
+    });
+
+    await create.save();
+
+    // Envia a confirmação após salvar
+    res.send("<h1>Usuário cadastrado com sucesso</h1>");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao processar a requisição" });
   }
 };
 
@@ -56,6 +85,8 @@ const UserController = async (req, res) => {
       const user_name_link = req.cookies.user_name_link || "";
       res.clearCookie("user_name_link"); // Limpa o cookie após o uso
 
+      const affiliate = await AffiliateDb.findOne({ user_email });
+
       let user = await LinqbioDb.findOne({ user_id });
       let login = {
         user_id: user_id,
@@ -65,7 +96,12 @@ const UserController = async (req, res) => {
         user_picture: user_picture,
         user_name_link: user_name_link,
         reimbursement_status: "Pending payment",
+        affiliate: false,
       };
+
+      if (affiliate) {
+        login.affiliate = true;
+      }
 
       if (!user) {
         user = new LinqbioDb({
@@ -148,6 +184,8 @@ const DeleteAccount = async (req, res) => {
           //não realizará o reembolso, pois tentou burlar
           await UserCustom.deleteOne({ user_id });
 
+          await OverviewDb.deleteOne({ user_id });
+
           await LinqbioDb.findOneAndUpdate(
             { user_id },
             {
@@ -173,6 +211,8 @@ const DeleteAccount = async (req, res) => {
 
           await UserCustom.deleteOne({ user_id });
 
+          await OverviewDb.deleteOne({ user_id });
+
           await LinqbioDb.findOneAndUpdate(
             { user_id },
             {
@@ -188,6 +228,8 @@ const DeleteAccount = async (req, res) => {
         }
       } else {
         await UserCustom.deleteOne({ user_id });
+
+        await OverviewDb.deleteOne({ user_id });
 
         await LinqbioDb.findOneAndUpdate(
           { user_id },
@@ -387,6 +429,27 @@ const CompletedPayment = async (req, res) => {
       });
 
       await overview.save();
+
+      const { coupon } = user;
+
+      let check_sales = await AffiliateDb.findOne({
+        "id_client.id_client": user_id,
+      });
+
+      if (!check_sales) {
+        await AffiliateDb.findOneAndUpdate(
+          { coupon },
+          {
+            $push: {
+              id_cliente: user_id,
+            },
+            $inc: {
+              sales: 1,
+            },
+          },
+          { new: true }
+        );
+      }
     }
 
     let login = {
@@ -851,7 +914,8 @@ const TrackLink = async (req, res) => {
 //-------------,--------------
 
 export {
-  DeleteAll,
+  cadAffiliate,
+  EnvCadAff,
   UserController,
   AcessDashboard,
   fastUserCreation,
@@ -869,6 +933,7 @@ export {
 };
 
 //modelo
+
 const variavel = async (req, res) => {
   try {
   } catch (error) {
