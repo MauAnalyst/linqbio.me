@@ -371,8 +371,14 @@ const CompletedPayment = async (req, res) => {
 
       await userCustom.save();
 
+      const date_now = new Date().getDay();
+      const mother_now = new Date().getMonth();
+      const year_now = new Date().getFullYear();
+
       const overview = new OverviewDb({
         user_id,
+        mother_reference: `${mother_now + 1}/${year_now}`,
+        day_reference: `${date_now}`,
         click_links: {
           id_link: uniqueId,
         },
@@ -700,6 +706,66 @@ const sendHelp = async (req, res) => {
   }
 };
 
+const TrackLink = async (req, res) => {
+  const { id_link } = req.body;
+  const day_now = new Date().getDay();
+  const mother_now = new Date().getMonth();
+  const year_now = new Date().getFullYear();
+  const date_now = `${mother_now + 1}/${year_now}`;
+
+  try {
+    const link = await OverviewDb.findOne({ "click_links.id_link": id_link });
+    let result;
+
+    if (link.mother_reference !== date_now) {
+      console.log(link.mother_reference);
+      console.log(date_now);
+      result = "mm/aaaa diferentes";
+      await OverviewDb.updateOne(
+        { "click_links.id_link": id_link },
+        {
+          $set: {
+            "click_links.$.click_today": 1,
+            "click_links.$.click_mother": 1,
+          },
+        }
+      );
+    } else {
+      if (link.day_reference !== day_now.toString()) {
+        result = "dias diferentes";
+        await OverviewDb.updateOne(
+          { "click_links.id_link": id_link },
+          {
+            $set: {
+              "click_links.$.click_today": 1,
+            },
+            $inc: {
+              "click_links.$.click_mother": 1,
+            },
+          }
+        );
+      } else {
+        result = "datas iguais";
+        await OverviewDb.updateOne(
+          { "click_links.id_link": id_link },
+          {
+            $inc: {
+              "click_links.$.click_today": 1,
+              "click_links.$.click_mother": 1,
+            },
+          } // Incrementa o campo click_today
+        );
+      }
+    }
+    console.log(result);
+    // Retorna sucesso
+    res.status(200).json({ message: "Clique registrado com sucesso!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
+  }
+};
+
 //-------------,--------------
 
 export {
@@ -717,6 +783,7 @@ export {
   ViewPage,
   AcessHelp,
   sendHelp,
+  TrackLink,
 };
 
 //modelo

@@ -38,8 +38,10 @@
         <div>
           <a
             href="<%= element.link %>"
+            target="_blank"
             id="origin-a"
             origin="<%= element.origin %>"
+            link-id="<%= element.id_link %>"
           >
             <span id="id-link" style="display: none"
               ><%= element.id_link %></span
@@ -62,6 +64,8 @@
       <p>Desenvolvido por Mauricio Brito dos Santos</p>
       <p>&copy; 2024 Linqbio. Todos os direitos reservados.</p>
     </footer>
+
+    <script src="/js/viewPage.js"></script>
 
   </body>
 </html>

@@ -16,6 +16,7 @@ import {
   ViewPage,
   AcessHelp,
   sendHelp,
+  TrackLink,
 } from "../controllers/linqbioController.js";
 
 const app = express();
@@ -50,6 +51,9 @@ router.get("/user/help", requiresAuth(), AcessHelp);
 router.post("/user/update-profile", UpdateProfile);
 router.post("/user/update-background", UpdateBackground);
 router.post("/user/update-link", UpdateLink);
+
+router.post("/action/track-link", TrackLink);
+
 router.post("/user/help-me", sendHelp);
 
 router.get("/:user_name_link", ViewPage);
