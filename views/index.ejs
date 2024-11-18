@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linqbio - Página Inicial</title>
+    <title>Linqbio | Link para as suas bios</title>
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
     <link rel="stylesheet" href="/css/index.css" />
     <link
@@ -15,7 +15,7 @@
   <body>
     <header>
       <div class="navbar">
-        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <h1><a href="/h/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
             <% if (login.affiliate === true){ %>
@@ -167,11 +167,11 @@
             <input
               type="radio"
               name="plan"
-              value="basic"
+              value="start"
               style="display: none"
             />
             <div class="pricing-group">
-              <h3>BASIC</h3>
+              <h3>START</h3>
               <span class="pricing-value">19,99</span>
               <p>
                 <span class="material-symbols-outlined">check</span>
@@ -181,7 +181,7 @@
               <p>
                 <span class="material-symbols-outlined">check</span>
                 Personalização <br />
-                Limitada
+                do seu jeito
               </p>
             </div>
           </label>
@@ -190,12 +190,12 @@
             <input
               type="radio"
               name="plan"
-              value="premium"
+              value="expand"
               style="display: none"
               checked
             />
             <div class="pricing-group">
-              <h3>PREMIUM</h3>
+              <h3>Expand</h3>
               <span class="pricing-value">29,99</span>
               <p>
                 <span class="material-symbols-outlined">check</span>
@@ -212,7 +212,7 @@
         </div>
 
         <div id="coupon-input">
-          <label for="coupon">Cupom (50% de desconto)</label>
+          <label for="coupon">Cupom (40% de desconto)</label>
           <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro === 'Coupon'){ %>
             <p id="msgm-erro"><%= log_erro.msgm %></p>
             <% } %>

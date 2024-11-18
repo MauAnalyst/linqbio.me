@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linqbio | Dashboard</title>
+    <title>Linqbio | Afiliado</title>
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/affiliate.css" />
 
     <link
       rel="stylesheet"
@@ -18,28 +18,28 @@
         <h1><a href="/h/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
-            <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
-            <li>
-              <a href="/user/custom-page" id="custom-page">Personalizar</a>
-            </li>
-            <li><a href="/user/help" id="help">Ajuda</a></li>
-            <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
+            <% if (login.affiliate === true){ %>
+            <li><a href="/affiliate/dashboard">Afiliados</a></li>
+            <% } %>
+            <li><a href="/h/home#exemples">Exemplos</a></li>
+            <li><a href="/h/home#howWorks">Como Funciona</a></li>
+            <li><a href="/h/home#pricing">Preços</a></li>
+            <li><a href="/h/home#help">Help</a></li>
           </ul>
+
+          <% if(login.user_name){ %>
+          <!-- com login -->
           <div>
             <a class="user-icon">
-              <img src="<%= login.user_picture %>" alt="gato desenhado" />
-              <!-- <img src="./imgs/cat.png" alt="" /> -->
+              <img src="<%= login.user_picture %>" alt="gato desneho" />
               <span class="material-symbols-outlined">arrow_drop_down</span></a
             >
             <div class="logged-user">
               <div class="profile">
                 <img src="<%= login.user_picture %>" alt="gato desenho" />
-                <!-- <img src="./imgs/cat.png" alt="" /> -->
                 <div class="profile-info">
                   <p><%= login.user_name %></p>
                   <p><%= login.user_email %></p>
-                  <!-- <p>name user</p>
-                  <p>exemple@gmail.com</p> -->
                 </div>
               </div>
               <div class="sign-out">
@@ -54,19 +54,31 @@
               </div>
             </div>
           </div>
+
+          <% } else {%>
+          <!-- sem login -->
+          <a class="sign" href="/login">Entrar ou Criar Conta</a>
+
+          <% } %>
           <div id="menu-resp">
             <span class="material-symbols-outlined no-select" id="icon"
               >menu</span
             >
+            <!-- <span class="material-symbols-outlined">close</span> -->
           </div>
         </nav>
       </div>
       <div id="items-menu-resp">
         <ul>
-          <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
-          <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
-          <li><a href="/user/help" id="help">Help</a></li>
-          <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
+          <% if (login.affiliate === true){ %>
+          <li><a href="/affiliate/dashboard">Afiliados</a></li>
+          <% } %>
+          <li><a href="/h/home#exemples" class="no-select">Exemplos</a></li>
+          <li>
+            <a href="/h/home#howWorks" class="no-select">Como Funciona</a>
+          </li>
+          <li><a href="/h/home#pricing" class="no-select">Preços</a></li>
+          <li><a href="/h/home#help" class="no-select">Help</a></li>
         </ul>
       </div>
     </header>
@@ -75,7 +87,6 @@
       <div class="conteiner-delete">
         <h2>Aaaaah nããooooo</h2>
         <img src="/imgs/bored.png" alt="gato triste" />
-
         <% if(login.buy_status === 'Success'){ %> <% if(
         login.reimbursement_status === 'Authorized' ){ %>
         <p>
@@ -92,7 +103,7 @@
           deletar sua conta ? <br />
           <span class="warning"
             >você não terá direito ao reembolso, <br />
-            pois a compra foi efeutada a mais de 7 dias.</span
+            pois a compra foi efeutada a mais de 30 dias.</span
           >
           <br />
         </p>
@@ -130,44 +141,38 @@
     <!-- sections -->
 
     <section class="section-dashboard">
-      <h1>Dashboard</h1>
+      <h1>Dashboard de <%= login.user_name %></h1>
+      <p>Seu cupon é <%= login.coupon %></p>
+      <div class="overview-money">
+        <div class="balance">
+          Receita Total <br />
+          R$ <%= overview.sales_balance %>
+        </div>
+        <div class="paid">
+          Entregue <br />
+          R$ <%= overview.sales_paid %>
+        </div>
+      </div>
       <div class="container">
         <div class="container-group">
-          <h3>
-            Acessos diários<br /><span
-              ><%= `${overview.day_reference}/${overview.mother_reference}`
-              %></span
-            >
-          </h3>
-          <h2><%= overview.access_today %></h2>
+          <h3>Total de Vendas<br /><span></span></h3>
+          <h2><%= overview.sales %></h2>
         </div>
         <div class="container-group">
           <h3>
-            Acessos Mês Atual <br /><span
-              ><%= overview.mother_reference %></span
-            >
+            Vendas por Plano <br />
+            <span></span>
           </h3>
-          <h2><%= overview.access_mother %></h2>
+          <h4>Start - <%= overview.sales_start %></h4>
+          <h4>Expand - <%= overview.sales_expand %></h4>
         </div>
-        <div class="container-group">
-          <h3>
-            Cliques Totais <br /><span><%= overview.mother_reference %></span>
-          </h3>
-          <h2>
-            <%= overview.click_links.reduce((total, i) => total +
-            i.click_mother, 0 ) %>
-          </h2>
+        <div class="container-group sales-canceled">
+          <h3>Vendas Canceladas<br /><span>Não passou de 7 dias</span></h3>
+          <h2><%= overview.sales_canceled %></h2>
         </div>
-        <div class="container-group">
-          <h3>
-            Cliques por Links <br />
-            <span><%= overview.mother_reference %></span>
-          </h3>
-          <% overview.click_links.forEach((e, i) => { %>
-          <h4>
-            <%= `${userCustom.links_user[i].origin} - ${e.click_mother}` %>
-          </h4>
-          <% }) %>
+        <div class="container-group sales-pending">
+          <h3>Vendas Pendentes<br /><span>Compra não realizada</span></h3>
+          <h2><%= overview.sales_pending %></h2>
         </div>
       </div>
     </section>

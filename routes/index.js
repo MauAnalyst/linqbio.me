@@ -3,6 +3,7 @@ import auth0 from "express-openid-connect";
 import {
   cadAffiliate,
   EnvCadAff,
+  Affiliate,
   UserController,
   AcessDashboard,
   fastUserCreation,
@@ -37,6 +38,8 @@ router.get("/h/not-found", (req, res) => {
 router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
 
+router.get("/affiliate/dashboard", requiresAuth(), Affiliate);
+
 //payment
 router.post("/user/checkout", requiresAuth(), Payment);
 router.get("/user/complete", requiresAuth(), CompletedPayment);
@@ -48,14 +51,14 @@ router.get("/user/dashboard", requiresAuth(), AcessDashboard);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
 router.get("/user/help", requiresAuth(), AcessHelp);
 
-router.post("/user/update-profile", UpdateProfile);
-router.post("/user/update-background", UpdateBackground);
-router.post("/user/update-link", UpdateLink);
+router.post("/user/update-profile", requiresAuth(), UpdateProfile);
+router.post("/user/update-background", requiresAuth(), UpdateBackground);
+router.post("/user/update-link", requiresAuth(), UpdateLink);
 
-router.post("/action/track-link", TrackLink);
+router.post("/action/track-link", requiresAuth(), TrackLink);
 
-router.post("/user/help-me", sendHelp);
+router.post("/user/help-me", requiresAuth(), sendHelp);
 
-router.get("/:user_name_link", ViewPage);
+router.get("/:user_name_link", requiresAuth(), ViewPage);
 
 export { router };

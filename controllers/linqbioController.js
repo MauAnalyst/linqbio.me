@@ -23,8 +23,9 @@ const auth0Management = new ManagementClient({
 
 const cadAffiliate = async (req, res) => {
   const email = req.oidc.user.email;
+  const email_fun = process.env.EMAIL_FUND;
   try {
-    if (email !== "maufinancas@gmail.com") {
+    if (email !== email_fun) {
       return res.redirect("/"); // Usar return para garantir que não haja mais execução
     }
     // Se o email for o correto
@@ -38,6 +39,7 @@ const cadAffiliate = async (req, res) => {
 };
 
 const EnvCadAff = async (req, res) => {
+  const email = req.oidc.user.email;
   const { user_email, coupon } = req.body;
   try {
     const user_aff = await LinqbioDb.findOne({ user_email });
@@ -59,6 +61,81 @@ const EnvCadAff = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao processar a requisição" });
+  }
+};
+
+const Affiliate = async (req, res) => {
+  const user_name = req.oidc.user.name;
+  const user_id = req.oidc.user.sub;
+  const user_email = req.oidc.user.email;
+  const user_picture = req.oidc.user.picture;
+
+  const user_name_link = req.cookies.user_name_link || "";
+  res.clearCookie("user_name_link"); // Limpa o cookie após o uso
+
+  // let user = await LinqbioDb.findOne({ user_id });
+  let login = {
+    user_id: user_id,
+    user_name: user_name,
+    user_email: user_email,
+    buy_status: "Pending",
+    user_picture: user_picture,
+    user_name_link: user_name_link,
+    reimbursement_status: "Pending payment",
+    affiliate: false,
+    coupon: "",
+  };
+
+  try {
+    const affiliate = await AffiliateDb.findOne({ user_email });
+
+    if (affiliate) {
+      login.affiliate = true;
+      login.coupon = affiliate.coupon;
+    } else {
+      return res.redirect("/");
+    }
+
+    let overview = {
+      sales: affiliate.sales,
+      sales_canceled: affiliate.sales_canceled,
+      sales_balance: affiliate.sales_balance
+        .toFixed(2)
+        .toString()
+        .replace(".", ","),
+      sales_paid: affiliate.sales_paid.toFixed(2).toString().replace(".", ","),
+      sales_pending: 0,
+      sales_expand: 0,
+      sales_start: 0,
+    };
+
+    const { coupon } = affiliate;
+    const clients = await LinqbioDb.find({ coupon }).select(
+      "user_id plan buy_status reimbursement_status"
+    );
+
+    clients.forEach((e, i) => {
+      switch (e.buy_status) {
+        case "Success":
+          if (e.plan === "start") {
+            overview.sales_start += 1;
+          } else {
+            overview.sales_expand += 1;
+          }
+          break;
+
+        case "Pending":
+          overview.sales_pending += 1;
+        default:
+          console.log("nada acontece");
+          break;
+      }
+    });
+
+    return res.render("affiliate", { login, overview });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar ou deletar link" });
   }
 };
 
@@ -213,6 +290,37 @@ const DeleteAccount = async (req, res) => {
 
           await OverviewDb.deleteOne({ user_id });
 
+          const { plan } = user;
+          const coupon_value = +process.env.COUPON_DESC;
+          const commission = +process.env.COMMISSION;
+
+          let value_prod =
+            plan === "start"
+              ? +process.env.PLAN_BASIC_VALUE
+              : +process.env.PLAN_PREMIUM_VALUE;
+
+          const discount = value_prod * coupon_value;
+          value_prod = ((value_prod - discount) * commission).toFixed(2);
+
+          const value_number = parseFloat(value_prod);
+
+          await AffiliateDb.findOneAndUpdate(
+            { "client_sales.id_client": user_id },
+            {
+              $inc: {
+                sales: -1,
+                sales_canceled: 1,
+                sales_balance: -value_number,
+              },
+              $pull: {
+                client_sales: {
+                  id_client: user_id,
+                },
+              },
+            },
+            { new: true }
+          );
+
           await LinqbioDb.findOneAndUpdate(
             { user_id },
             {
@@ -274,7 +382,7 @@ const Payment = async (req, res) => {
   const user_name = req.oidc.user.name;
   const user_email = req.oidc.user.email;
   let name_prod = "PLANO " + plan.toUpperCase();
-  let value_prod;
+  let value_prod = 0;
   const coupon_value = +process.env.COUPON_DESC;
   const coupons = process.env.COUPONS.split(",");
 
@@ -284,14 +392,14 @@ const Payment = async (req, res) => {
   };
 
   value_prod =
-    plan === "basic"
+    plan === "start"
       ? +process.env.PLAN_BASIC_VALUE
       : +process.env.PLAN_PREMIUM_VALUE;
 
   if (coupon !== "") {
     if (coupons.includes(coupon)) {
-      value_prod *= coupon_value;
-      value_prod = value_prod.toFixed();
+      let discount = value_prod * coupon_value;
+      value_prod = value_prod - discount;
     } else {
       log_erro.type_erro = "Coupon";
       log_erro.msgm = "Cupom Inválido, favor rever com o vendedor";
@@ -405,11 +513,11 @@ const CompletedPayment = async (req, res) => {
         },
         links_user: {
           id_link: uniqueId,
-          link: `https://linqbio.me/${user.user_name_link}`,
+          link: `https://linqbio.me/`,
           origin: "linqbio", // TikTok, Instagram, etc.
           other: "", // Para outras origens, onde o usuário define o nome
-          title: "Meu Linqbio",
-          description: "Veja todas as minhas redes sociais",
+          title: "Linqbio",
+          description: "Link para as suas bios",
         },
       });
 
@@ -430,21 +538,40 @@ const CompletedPayment = async (req, res) => {
 
       await overview.save();
 
-      const { coupon } = user;
+      const { coupon, plan } = user;
+      const coupon_value = +process.env.COUPON_DESC;
+      const commission = +process.env.COMMISSION;
+
+      let value_prod =
+        plan === "start"
+          ? +process.env.PLAN_BASIC_VALUE
+          : +process.env.PLAN_PREMIUM_VALUE;
+
+      //definindo o valor final do plano
+      const discount = value_prod * coupon_value;
+      value_prod = ((value_prod - discount) * commission).toFixed(2);
 
       let check_sales = await AffiliateDb.findOne({
-        "id_client.id_client": user_id,
+        "client_sales.id_client": user_id,
       });
+
+      const value_number = parseFloat(value_prod);
+
+      console.log(value_prod);
+      console.log(value_number);
 
       if (!check_sales) {
         await AffiliateDb.findOneAndUpdate(
           { coupon },
           {
-            $push: {
-              id_cliente: user_id,
-            },
             $inc: {
               sales: 1,
+              sales_balance: value_number,
+            },
+            $push: {
+              client_sales: {
+                id_client: user_id,
+              },
             },
           },
           { new: true }
@@ -916,6 +1043,7 @@ const TrackLink = async (req, res) => {
 export {
   cadAffiliate,
   EnvCadAff,
+  Affiliate,
   UserController,
   AcessDashboard,
   fastUserCreation,

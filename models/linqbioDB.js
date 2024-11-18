@@ -65,6 +65,9 @@ const affiliateSchema = new Schema({
   user_email: { type: String, required: true },
   coupon: { type: String, required: true },
   sales: { type: Number, default: 0 },
+  sales_canceled: { type: Number, default: 0 },
+  sales_balance: { type: Number, default: 0.0 },
+  sales_paid: { type: Number, default: 0.0 },
   client_sales: [
     {
       id_client: { type: String, required: false },
