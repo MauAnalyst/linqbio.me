@@ -22,6 +22,11 @@
             <li>
               <a href="/user/custom-page" id="custom-page">Personalizar</a>
             </li>
+            <li>
+              <a href="/<%=userCustom.user_name_link%>" target="_blank"
+                >Visualizar Page</a
+              >
+            </li>
             <li><a href="/user/help" id="help">Ajuda</a></li>
             <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
           </ul>
@@ -65,7 +70,12 @@
         <ul>
           <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
           <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
-          <li><a href="/user/help" id="help">Help</a></li>
+          <li>
+            <a href="/<%=userCustom.user_name_link%>" target="_blank"
+              >Visualizar Page</a
+            >
+          </li>
+          <li><a href="/user/help" id="help">Ajuda</a></li>
           <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
         </ul>
       </div>

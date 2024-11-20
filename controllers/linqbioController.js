@@ -695,6 +695,14 @@ const AcessCustom = async (req, res) => {
   }
 };
 
+// const UploadPhoto = async (req, res) => {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: "Erro ao atualizar dados" });
+//   }
+// };
+
 const UpdateProfile = async (req, res) => {
   const user_id = req.oidc.user.sub;
   let { user_name, user_description } = req.body;
@@ -1051,6 +1059,7 @@ export {
   Payment,
   CompletedPayment,
   AcessCustom,
+  // UploadPhoto,
   UpdateProfile,
   UpdateBackground,
   UpdateLink,

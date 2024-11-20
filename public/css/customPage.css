@@ -422,8 +422,7 @@ body {
   justify-content: center;
 }
 
-.section-view .view-profile #edit-profile,
-.section-view .view-profile #edit-background {
+.section-view .view-profile #edits div {
   background-color: var(--color-action-primary);
   color: var(--color-background-primary);
   padding: 0.5rem 0.7rem;
@@ -438,8 +437,16 @@ body {
   transition: all 0.2s ease;
 }
 
-.section-view .view-profile #edit-profile:hover,
-.section-view .view-profile #edit-background:hover {
+.section-view .view-profile #edits #share {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.section-view .view-profile #edits #share .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.section-view .view-profile #edits div:hover {
   background-color: var(--color-action-primary-hover);
 }
 
@@ -641,33 +648,60 @@ body {
 
 .section-form .forms {
   background-color: var(--color-background-primary);
-  max-width: 95%;
   padding: 2rem;
+  width: 100%;
+  max-width: 400px;
   border-radius: 1rem;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  animation: formUP 0.3s ease forwards;
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+@keyframes formUP {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .section-form .forms h1 {
-  font-size: 1.2rem;
+  text-align: start;
+  font-size: 1.5rem;
   margin-left: 0.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-action-primary);
+  margin-bottom: 1rem;
+  color: black;
 }
 
 .section-form .forms #close-form {
   position: absolute;
   top: 0;
   right: 0;
-  margin-top: -0.5rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
+.section-form .forms form {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
 .section-form .forms #close-form .material-symbols-outlined {
   background-color: var(--color-background-primary);
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   border-radius: 50%;
   padding: 0.1rem;
   cursor: pointer;
@@ -678,7 +712,8 @@ body {
   flex-direction: column;
   justify-content: center;
   margin-bottom: 0.5rem;
-  min-width: 250px;
+  width: 100%;
+  /* min-width: 250px; */
 }
 
 .section-form .forms .form-group p {
@@ -692,23 +727,27 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .section-form .forms .form-group label {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: bold;
   margin-bottom: 0.2rem;
+  margin-top: 1rem;
+  color: var(--color-text-primary);
 }
 
 .section-form .forms .form-group input[type="text"],
 .section-form .forms .form-group select {
-  font-size: 0.7rem;
-  padding: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.9rem;
   border: 0.1rem solid var(--color-text-primary);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
+  /* width: 100%; */
 }
 
 .section-form .forms .form-group input[type="text"]:focus,
@@ -721,17 +760,26 @@ body {
   margin-top: 2rem;
 }
 
+.section-form .forms .form-group.form-buttom .form-sub-buttom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
 .section-form .forms .form-group button {
-  padding: 0.5rem;
+  padding: 1rem;
   font-size: 1rem;
   font-weight: bold;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
-.section-form .forms .form-group #salve {
+.section-form .forms .form-group #salve,
+.section-form .forms .form-group #follow {
   background-color: var(--color-action-primary);
   color: var(--color-background-primary);
 }
@@ -739,23 +787,91 @@ body {
 .section-form .forms .form-group #cancel,
 .section-form .forms .form-group #delete {
   background-color: rgba(255, 0, 0, 0.15);
-  margin-top: 0.5rem;
   color: var(--color-text-primary);
 }
 
 .section-form .forms .form-group #delete {
   display: none;
   background-color: rgba(255, 0, 0, 0.5);
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   color: var(--color-background-primary);
 }
 
-.section-form .forms .form-group #salve:hover {
+.section-form .forms .form-group #salve:hover,
+.section-form .forms .form-group #follow:hover {
   background-color: var(--color-action-primary-hover);
 }
 .section-form .forms .form-group #cancel:hover,
 .section-form .forms .form-group #delete:hover {
   background-color: rgba(255, 0, 0, 0.35);
+}
+
+/* icone */
+
+.section-form .forms .form-group .question-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.section-form .forms .form-group .icon-img {
+  position: relative;
+}
+
+.section-form .forms .form-group .icon-img img {
+  width: 100px;
+  cursor: pointer;
+}
+
+.section-form .forms .form-group .icon-img label {
+  position: relative;
+  opacity: 50%;
+}
+
+.section-form .forms .form-group .icon-img .material-symbols-outlined {
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  background-color: var(--color-action-primary);
+  color: var(--color-background-primary);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* qrcode */
+
+.qrcode {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.qrcode a {
+  background-color: var(--color-action-primary);
+  color: #ffffff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.qrcode .share-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.qrcode #copy {
+  background-color: var(--color-text-primary);
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 /* ------  footer  ------ */
@@ -907,8 +1023,6 @@ circle {
 /* temas */
 
 .ajust-form {
-  overflow-y: unset;
-  overflow-x: unset;
   max-height: 250px;
 }
 
@@ -925,8 +1039,9 @@ circle {
 }
 
 .form-group-theme {
-  max-height: 250px;
-  padding: 1rem;
+  width: 100%;
+  /* max-height: 250px;
+  padding: 1rem; */
 }
 
 /* .form-group-theme .form-sub-group {
@@ -936,15 +1051,17 @@ circle {
 } */
 
 .form-group-theme label {
-  background-color: red;
-  width: 4rem;
-  height: 4rem;
+  /* width: 4rem;
+  height: 4rem; */
+  padding: 1rem 0;
+  width: 100%;
   border-radius: 1rem;
   border: 0.1rem solid transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 100;
 }
 
 .form-group-theme input[type="radio"] {

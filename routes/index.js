@@ -1,5 +1,6 @@
 import express from "express";
 import auth0 from "express-openid-connect";
+// import { upload } from "../config/s3.js";
 import {
   cadAffiliate,
   EnvCadAff,
@@ -11,6 +12,7 @@ import {
   Payment,
   CompletedPayment,
   AcessCustom,
+  // UploadPhoto,
   UpdateProfile,
   UpdateBackground,
   UpdateLink,
@@ -51,6 +53,12 @@ router.get("/user/dashboard", requiresAuth(), AcessDashboard);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
 router.get("/user/help", requiresAuth(), AcessHelp);
 
+// router.post(
+//   "/user/upload-photo",
+//   requiresAuth(),
+//   upload.single("file"),
+//   UploadPhoto
+// );
 router.post("/user/update-profile", requiresAuth(), UpdateProfile);
 router.post("/user/update-background", requiresAuth(), UpdateBackground);
 router.post("/user/update-link", requiresAuth(), UpdateLink);

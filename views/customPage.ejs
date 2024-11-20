@@ -9,8 +9,9 @@
 
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogoutandaddandedit"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogoutandaddandeditshareandcontent_copy"
     />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   </head>
   <body id="<%=userCustom.theme.body_theme%>">
     <header>
@@ -21,6 +22,11 @@
             <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
             <li>
               <a href="/user/custom-page" id="custom-page">Personalizar</a>
+            </li>
+            <li>
+              <a href="/<%=userCustom.user_name_link%>" target="_blank"
+                >Visualizar Page</a
+              >
             </li>
             <li><a href="/user/help" id="help">Ajuda</a></li>
             <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
@@ -65,6 +71,11 @@
         <ul>
           <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
           <li><a href="/user/custom-page" id="custom-page">Personalizar</a></li>
+          <li>
+            <a href="/<%=userCustom.user_name_link%>" target="_blank"
+              >Visualizar Page</a
+            >
+          </li>
           <li><a href="/user/help" id="help">Help</a></li>
           <!-- <li><a href="/user/configs" id="configs">Configurações</a></li> -->
         </ul>
@@ -139,6 +150,9 @@
             Editar Perfil
           </div>
           <div id="edit-background">Editar Fundo</div>
+          <div id="share">
+            <span class="material-symbols-outlined">share</span>
+          </div>
         </div>
 
         <div class="view-info">
@@ -192,14 +206,6 @@
       </div>
     </section>
 
-    <div id="view-page-user">
-      <div>
-        <a href="/<%=userCustom.user_name_link%>" target="_blank"
-          >linqbio.me/<%= userCustom.user_name_link %></a
-        >
-      </div>
-    </div>
-
     <!-- formularios -->
     <div id="form-background"></div>
 
@@ -244,8 +250,10 @@
             </p>
           </div>
           <div class="form-group form-buttom">
-            <button type="submit" id="salve">Salvar</button>
-            <button type="button" id="cancel">Cancelar</button>
+            <div class="form-sub-buttom">
+              <button type="submit" id="salve">Salvar</button>
+              <button type="button" id="cancel">Cancelar</button>
+            </div>
           </div>
         </form>
       </div>
@@ -281,8 +289,10 @@
             />
           </div>
           <div class="form-group form-buttom">
-            <button type="submit" id="salve">Salvar</button>
-            <button type="button" id="cancel">Cancelar</button>
+            <div class="form-sub-buttom">
+              <button type="submit" id="salve">Salvar</button>
+              <button type="button" id="cancel">Cancelar</button>
+            </div>
           </div>
         </form>
       </div>
@@ -350,10 +360,37 @@
             </div>
           </div>
           <div class="form-group form-buttom">
-            <button type="submit" id="salve">Salvar</button>
-            <button type="button" id="cancel">Cancelar</button>
+            <div class="form-sub-buttom">
+              <button type="submit" id="salve">Salvar</button>
+              <button type="button" id="cancel">Cancelar</button>
+            </div>
           </div>
         </form>
+      </div>
+    </section>
+
+    <!-- share -->
+    <section class="section-form" id="section-share">
+      <div class="forms">
+        <div id="close-form" class="no-select">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+        <h1>Compatilhar Page</h1>
+        <div class="qrcode">
+          <canvas id="qrcode"></canvas>
+
+          <div class="share-link">
+            <a id="user-link" href="/<%=userCustom.user_name_link%>"
+              >https://www.linqbio.me/<%=userCustom.user_name_link%></a
+            >
+            <!-- <span class="material-symbols-outlined" id="content-share"
+              >share</span
+            > -->
+            <span class="material-symbols-outlined" id="copy"
+              >content_copy</span
+            >
+          </div>
+        </div>
       </div>
     </section>
 
@@ -365,72 +402,149 @@
         <div id="close-form">
           <span class="material-symbols-outlined">close</span>
         </div>
-        <h1>Adicionar ou Editar Link</h1>
+        <h1>Add ou Editar Link</h1>
         <form id="add-link" action="/user/update-link" method="post">
           <input type="hidden" id="id_link" name="id_link" value="" />
-          <div class="form-group">
-            <label for="link">Seu link:</label>
-            <input
-              type="text"
-              id="link"
-              name="link"
-              placeholder="Ex: https://titkok.com/@linqbio"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="select_origin">Origem do seu link:</label>
-            <div class="form-sub-group">
-              <select name="select_origin" id="select_origin">
-                <option value="tiktok">tiktok</option>
-                <option value="facebook">facebook</option>
-                <option value="instagram">instagram</option>
-                <option value="telegram">telegram</option>
-                <option value="behance">behance</option>
-                <option value="behance">linqbio</option>
-                <option value="outro">outro</option>
-              </select>
+          <!-- primerio formulário -->
+          <div id="form-one">
+            <div class="form-group">
+              <label for="link">Seu link:</label>
               <input
                 type="text"
-                id="other"
-                name="other"
-                placeholder="Escolha 'outro' para habilitar"
-                disabled
+                id="link"
+                name="link"
+                placeholder="Ex: https://titkok.com/@linqbio"
+                required
+              />
+            </div>
+            <!-- <div class="form-group" style="display: none">
+              <label for="select_origin">Origem do seu link:</label>
+              <div class="form-sub-group">
+                <select name="select_origin" id="select_origin">
+                  <option value="tiktok">tiktok</option>
+                  <option value="facebook">facebook</option>
+                  <option value="instagram">instagram</option>
+                  <option value="telegram">telegram</option>
+                  <option value="behance">behance</option>
+                  <option value="behance">linqbio</option>
+                  <option value="outro">outro</option>
+                </select>
+                <input
+                  type="text"
+                  id="other"
+                  name="other"
+                  placeholder="Escolha 'outro' para habilitar"
+                  disabled
+                />
+              </div>
+            </div> -->
+
+            <div class="form-group">
+              <label for="title">Título:</label>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                placeholder="Ex: Meu Tiktok"
+                minlength="3"
+                maxlength="15"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="description">Descrição:</label>
+              <input
+                type="text"
+                name="description"
+                id="description"
+                placeholder="Ex: Me segue para aí"
+                maxlength="25"
+                required
               />
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="title">Título:</label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              placeholder="Ex: Meu Tiktok"
-              minlength="3"
-              maxlength="15"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="description">Descrição:</label>
-            <input
-              type="text"
-              name="description"
-              id="description"
-              placeholder="Ex: Me segue para aí"
-              maxlength="25"
-              required
-            />
+          <!-- formulário dois -->
+          <div id="form-two" style="display: none">
+            <div class="form-group">
+              <label for="select_origin">Origem do seu link:</label>
+              <div class="form-sub-group">
+                <select name="select_origin" id="select_origin">
+                  <option value="tiktok">tiktok</option>
+                  <option value="facebook">facebook</option>
+                  <option value="instagram">instagram</option>
+                  <option value="telegram">telegram</option>
+                  <option value="behance">behance</option>
+                  <option value="linqbio">linqbio</option>
+                  <option value="linqbio">outro</option>
+                </select>
+                <input
+                  type="text"
+                  id="other"
+                  name="other"
+                  placeholder="Escolha 'outro' para habilitar"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="icon_picture"> Personalizar ícone do link? </label>
+              <div class="question-icon">
+                <div class="form-sub-group">
+                  <input
+                    type="radio"
+                    id="icon-question-yes"
+                    name="icon_question"
+                    value="yes-custom"
+                  />
+                  <label for="icon-question-yes">Sim, personalizar</label>
+                </div>
+                <div class="form-sub-group">
+                  <input
+                    type="radio"
+                    id="icon-question-no"
+                    name="icon_question"
+                    value="no-custom"
+                    checked
+                  />
+                  <label for="icon-question-no">Não personalizar</label>
+                </div>
+              </div>
+              <div class="form-sub-group icon-img">
+                <input
+                  type="file"
+                  id="icon_picture"
+                  name="icon_picture"
+                  accept="image/*"
+                  disabled
+                  style="display: none"
+                />
+                <label for="icon_picture">
+                  <img
+                    src="/imgs/icones/tiktok.svg"
+                    alt="ícone da rede social"
+                    id="preview-icon"
+                  />
+                  <span class="material-symbols-outlined">add</span>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div class="form-group form-buttom">
             <input type="hidden" id="action_link" name="action_link" value="" />
-            <button type="submit" id="salve" onclick="setAction('save')">
-              Salvar
-            </button>
-            <button type="button" id="cancel">Cancelar</button>
+            <div class="form-sub-buttom">
+              <button type="button" id="follow">Seguinte</button>
+              <button
+                type="submit"
+                id="salve"
+                style="display: none"
+                onclick="setAction('save')"
+              >
+                Salvar
+              </button>
+              <button type="button" id="cancel">Cancelar</button>
+            </div>
             <button type="submit" id="delete" onclick="setAction('delete')">
               Deletar
             </button>
