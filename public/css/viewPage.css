@@ -542,6 +542,7 @@ body {
   max-width: 2rem;
   position: absolute;
   left: 10%;
+  border-radius: 00.5rem;
 }
 
 .section-view .view-links .info {

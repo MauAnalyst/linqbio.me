@@ -249,6 +249,13 @@ const DeleteAccount = async (req, res) => {
   try {
     const user = await LinqbioDb.findOne({ user_id });
 
+    const recipient = "mau.analyst@gmail.com";
+    const origin = user.user_email;
+    const title = `Usuário deletando consta`;
+    const description = `segue dados \n ${JSON.stringify(user)}`;
+
+    sendEmail("delete-account", recipient, origin, title, description);
+
     if (!user) {
       return res.redirect("/");
     }
@@ -527,8 +534,10 @@ const CompletedPayment = async (req, res) => {
         links_user: {
           id_link: uniqueId,
           link: `https://linqbio.me/`,
-          origin: "linqbio", // TikTok, Instagram, etc.
-          other: "", // Para outras origens, onde o usuário define o nome
+          origin: "linqbio",
+          icon_question: "no-custom",
+          icon_picture: "/imgs/icones/linqbio.svg",
+          other: "",
           title: "Linqbio",
           description: "Link para as suas bios",
         },
@@ -954,7 +963,6 @@ const UpdateLink = async (req, res) => {
           if (icon_question === "yes-custom") {
             icon_picture = file.key;
           }
-          console.log("arquivo trocado com sucesso");
         } else {
           if (icon_question === "yes-custom") {
             icon_picture = file.key;
@@ -1060,19 +1068,6 @@ const ViewPage = async (req, res) => {
       );
     }
 
-    // console.log(userCustom.links_user);
-    // let array = {
-    //   icon_picture: "",
-    // };
-
-    // userCustom.links_user.forEach(async (e) => {
-    //   if (e.icon_question === "yes-custom") {
-    //     array.icon_picture = await getFileUrlFromAws(e.icon_picture);
-    //   }
-    // });
-
-    // console.log(array);
-
     (async () => {
       for (const e of userCustom.links_user) {
         if (e.icon_question === "yes-custom") {
@@ -1147,7 +1142,7 @@ const sendHelp = async (req, res) => {
     const recipient = "mau.analyst@gmail.com";
     const origin = `${user.user_name} - ${user.user_email}`;
 
-    sendEmail(recipient, origin, title, description);
+    sendEmail("help", recipient, origin, title, description);
     res.redirect("/user/help");
   } catch (error) {
     console.log(error);

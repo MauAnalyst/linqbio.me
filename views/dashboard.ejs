@@ -175,7 +175,9 @@
           </h3>
           <% overview.click_links.forEach((e, i) => { %>
           <h4>
-            <%= `${userCustom.links_user[i].origin} - ${e.click_mother}` %>
+            <%= `${userCustom.links_user[i].other === '' ?
+            userCustom.links_user[i].origin : userCustom.links_user[i].other} -
+            ${e.click_mother}` %>
           </h4>
           <% }) %>
         </div>

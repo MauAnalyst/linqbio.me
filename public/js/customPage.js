@@ -154,7 +154,7 @@ const imgIcon = document.getElementById("preview-icon");
 originForm.addEventListener("change", (event) => {
   imgIcon.src = `/imgs/icones/${event.target.value}.svg`;
   console.log(event.target.value);
-  if (event.target.value === "linqbio") {
+  if (event.target.value === "outro") {
     otherForm.disabled = false;
     otherForm.focus();
   } else {

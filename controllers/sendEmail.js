@@ -6,7 +6,7 @@ dotenv.config();
 const email = process.env.EMAIL_SUP;
 const senha = process.env.PASS_SUP;
 
-const sendEmail = (recipient, origin, title, description) => {
+const sendEmail = (action, recipient, origin, title, description) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -15,21 +15,39 @@ const sendEmail = (recipient, origin, title, description) => {
     },
   });
 
-  const htmlContent = `<h1 class="text-aling: center; margin-bottom: 1rem; font-size: 1.2rem;">${title}</h1><p>${description}</p>`;
+  if (action === "help") {
+    const htmlContent = `<h1 class="text-aling: center; margin-bottom: 1rem; font-size: 1.2rem;">${title}</h1><p>${description}</p>`;
 
-  const mailOptions = {
-    from: email, // Remetente
-    to: recipient, // Destinatário
-    subject: origin, // Assunto
-    html: htmlContent, // Conteúdo HTML
-  };
+    const mailOptions = {
+      from: email, // Remetente
+      to: recipient, // Destinatário
+      subject: origin, // Assunto
+      html: htmlContent, // Conteúdo HTML
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log("Erro ao enviar o e-mail: " + error);
-    }
-    console.log("E-mail enviado: " + info.response);
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log("Erro ao enviar o e-mail: " + error);
+      }
+      console.log("E-mail enviado: " + info.response);
+    });
+  } else if (action === "delete-account") {
+    const htmlContent = `<h1 class="text-aling: center; margin-bottom: 1rem; font-size: 1.2rem;">${title}</h1><p>${description}</p>`;
+
+    const mailOptions = {
+      from: email, // Remetente
+      to: recipient, // Destinatário
+      subject: origin, // Assunto
+      html: htmlContent, // Conteúdo HTML
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log("Erro ao enviar o e-mail: " + error);
+      }
+      console.log("E-mail enviado: " + info.response);
+    });
+  }
 };
 
 export { sendEmail };
