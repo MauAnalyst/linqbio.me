@@ -690,10 +690,6 @@ const AcessCustom = async (req, res) => {
       reimbursement_status: user.reimbursement_status,
     };
 
-    if (user.origin_picture === "aws") {
-      login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
-    }
-
     if (user.buy_status !== "Success") {
       res.redirect("/");
     } else {
@@ -720,14 +716,6 @@ const AcessCustom = async (req, res) => {
         }
       }
 
-      let userCustom = SearchUserCustom;
-
-      userCustom.links_user.forEach(async (e) => {
-        if (e.icon_question === "yes-custom") {
-          e.icon_picture = await getFileUrlFromAws(e.icon_picture, 3600);
-        }
-      });
-
       await UserCustom.findOneAndUpdate(
         { user_id },
         {
@@ -736,7 +724,20 @@ const AcessCustom = async (req, res) => {
         { new: true }
       );
 
-      return res.render("customPage", { userCustom, login });
+      (async () => {
+        let userCustom = SearchUserCustom;
+
+        userCustom.links_user.forEach(async (e) => {
+          if (e.icon_question === "yes-custom") {
+            e.icon_picture = await getFileUrlFromAws(e.icon_picture, 3600);
+          }
+        });
+
+        if (user.origin_picture === "aws") {
+          login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
+        }
+        return res.render("customPage", { userCustom, login });
+      })();
     }
   } catch (error) {
     console.error(error);
@@ -754,24 +755,25 @@ const UploadPhoto = async (req, res) => {
       "user_picture origin_picture"
     );
 
-    if (!!file) {
-      if (user.origin_picture === "aws") {
-        const result = await deleteFileFromAws(user.user_picture);
-        console.log(result);
-      }
-
-      await LinqbioDb.findOneAndUpdate(
-        { user_id },
-        { user_picture: file.key, origin_picture: "aws" },
-        { new: true }
-      );
-
-      await UserCustom.findOneAndUpdate(
-        { user_id },
-        { user_picture: file.key, origin_picture: "aws" },
-        { new: true }
-      );
+    if (!file) {
+      return res.redirect("/user/custom-page");
     }
+
+    if (user.origin_picture === "aws") {
+      await deleteFileFromAws(user.user_picture);
+    }
+
+    await LinqbioDb.findOneAndUpdate(
+      { user_id },
+      { user_picture: file.key, origin_picture: "aws" },
+      { new: true }
+    );
+
+    await UserCustom.findOneAndUpdate(
+      { user_id },
+      { user_picture: file.key, origin_picture: "aws" },
+      { new: true }
+    );
 
     res.redirect("/user/custom-page");
   } catch (error) {

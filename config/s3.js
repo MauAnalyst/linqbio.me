@@ -31,7 +31,7 @@ const uploadPicture = multer({
     key: function (req, file, cb) {
       //cb(null, Date.now().toString() + path.extname(file.originalname));
       const userId = req.oidc.user.sub || "unknown_user";
-      const filename = `${"user_picture"}/${userId}${path.extname(
+      const filename = `${"user_picture"}/${userId}-${Date.now().toString()}${path.extname(
         file.originalname
       )}`;
       cb(null, filename);
