@@ -85,30 +85,32 @@
       <div class="conteiner-delete">
         <h2>Aaaaah nããooooo</h2>
         <img src="/imgs/bored.png" alt="gato triste" />
-        <% if(login.buy_status === 'Success'){ %>
-          <% if( login.reimbursement_status === 'Authorized' ){ %>
-            <p>
-              Poxa, tem certeza que deseja <br />
-              deletar sua conta ? <br />
-              <span class="warning"
-            >você será reembolsado em até 10 dias utéis.</span
-          > <br />
-            </p>
-          <%  } else  {%>
-            <p>
-              Poxa, tem certeza que deseja <br />
-              deletar sua conta ? <br />
-              <span class="warning"
-            >você não terá direito ao reembolso, <br> pois a compra foi efeutada a mais de 30 dias.</span
-          > <br />
-            </p>
+        <% if(login.buy_status === 'Success'){ %> <% if(
+          login.reimbursement_status === 'Authorized' ){ %>
+          <p>
+            Poxa, tem certeza que deseja <br />
+            deletar sua conta ? <br />
+            <span class="warning"
+              >você será reembolsado em até 10 dias utéis.</span
+            >
+            <br />
+          </p>
+          <% } else {%>
+          <p>
+            Poxa, tem certeza que deseja <br />
+            deletar sua conta ? <br />
+            <span class="warning"
+              >você não terá direito ao reembolso, <br />
+              pois a compra foi efetuada a mais de 7 dias.</span
+            >
+            <br />
+          </p>
+          <% } %> <% } else { %>
+          <p>
+            Poxa, você tem certeza que deseja <br />
+            deletar usa conta ?
+          </p>
           <% } %>
-        <% } else { %>
-        <p>
-          Poxa, você tem certeza que deseja <br />
-          deletar usa conta ?
-        </p>
-        <% } %>
 
         <form action="/user/delete-account" class="actions-buttons" method="post">
           <input

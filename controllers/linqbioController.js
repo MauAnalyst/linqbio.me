@@ -622,6 +622,24 @@ const AcessDashboard = async (req, res) => {
       reimbursement_status: user.reimbursement_status,
     };
 
+    if (user.reimbursement_status === "In review") {
+      const date_now = new Date();
+      const date_pay = new Date(user.date_created_payment);
+
+      const diffInMs = Math.abs(date_now - date_pay);
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+      if (date_now.getFullYear() !== date_pay.getFullYear() || diffInDays > 7) {
+        login.reimbursement_status = "Expired";
+        await LinqbioDb.findOneAndUpdate(
+          { user_id },
+          { reimbursement_status: "Expired" },
+          { new: true }
+        );
+      } else {
+        login.reimbursement_status = "Authorized";
+      }
+    }
+
     if (user.origin_picture === "aws") {
       login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
     }
@@ -862,8 +880,6 @@ const UpdateLink = async (req, res) => {
       });
     }
 
-    console.log(action_link);
-
     if (!link.toUpperCase().startsWith("HTTPS")) {
       log = "O link não é seguro ou é inválido, por favor utilizar https.";
 
@@ -912,7 +928,7 @@ const UpdateLink = async (req, res) => {
         );
       } else if (action_link === "delete") {
         if (question === "yes-custom") {
-          let result = await deleteFileFromAws(picture);
+          await deleteFileFromAws(picture);
         }
         await UserCustom.findOneAndUpdate(
           { user_id },
@@ -1044,7 +1060,28 @@ const ViewPage = async (req, res) => {
       );
     }
 
-    return res.render("viewPage", { userCustom });
+    // console.log(userCustom.links_user);
+    // let array = {
+    //   icon_picture: "",
+    // };
+
+    // userCustom.links_user.forEach(async (e) => {
+    //   if (e.icon_question === "yes-custom") {
+    //     array.icon_picture = await getFileUrlFromAws(e.icon_picture);
+    //   }
+    // });
+
+    // console.log(array);
+
+    (async () => {
+      for (const e of userCustom.links_user) {
+        if (e.icon_question === "yes-custom") {
+          e.icon_picture = await getFileUrlFromAws(e.icon_picture);
+        }
+      }
+
+      return res.render("viewPage", { userCustom });
+    })();
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Usuário não encontrado" });
@@ -1070,6 +1107,24 @@ const AcessHelp = async (req, res) => {
       buy_status: user.buy_status,
       reimbursement_status: user.reimbursement_status,
     };
+
+    if (user.reimbursement_status === "In review") {
+      const date_now = new Date();
+      const date_pay = new Date(user.date_created_payment);
+
+      const diffInMs = Math.abs(date_now - date_pay);
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+      if (date_now.getFullYear() !== date_pay.getFullYear() || diffInDays > 7) {
+        login.reimbursement_status = "Expired";
+        await LinqbioDb.findOneAndUpdate(
+          { user_id },
+          { reimbursement_status: "Expired" },
+          { new: true }
+        );
+      } else {
+        login.reimbursement_status = "Authorized";
+      }
+    }
 
     if (user.origin_picture === "aws") {
       login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
