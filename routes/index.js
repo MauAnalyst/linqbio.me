@@ -77,6 +77,6 @@ router.post("/action/track-link", requiresAuth(), TrackLink);
 
 router.post("/user/help-me", requiresAuth(), sendHelp);
 
-router.get("/:user_name_link", requiresAuth(), ViewPage);
+router.get("/:user_name_link", ViewPage);
 
 export { router };
