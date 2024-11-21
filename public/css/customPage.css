@@ -536,7 +536,8 @@ body {
 }
 
 .section-view .view-links .icon img {
-  max-width: 2rem;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
   border-radius: 0.5rem;
   left: 10%;
@@ -822,6 +823,7 @@ body {
 
 .section-form .forms .form-group .icon-img img {
   width: 100px;
+  height: 100px
   cursor: pointer;
 }
 
