@@ -34,6 +34,10 @@ router.post("/configs/action-cad", requiresAuth(), EnvCadAff);
 router.get("/h/home", (req, res) => {
   res.render("home");
 });
+router.get("/h/terms-and-privacy", (req, res) => {
+  res.render("terms");
+});
+
 router.get("/h/not-found", (req, res) => {
   res.render("status404");
 });
