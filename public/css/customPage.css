@@ -823,7 +823,7 @@ body {
 
 .section-form .forms .form-group .icon-img img {
   width: 100px;
-  height: 100px
+  height: 100px;
   cursor: pointer;
 }
 
@@ -840,6 +840,10 @@ body {
   color: var(--color-background-primary);
   border-radius: 50%;
   cursor: pointer;
+}
+
+#other {
+  max-width: 40%;
 }
 
 /* qrcode */
