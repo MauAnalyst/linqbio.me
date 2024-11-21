@@ -4,6 +4,11 @@ import {
   OverviewDb,
   AffiliateDb,
 } from "../models/linqbioDB.js";
+import {
+  getFileUrlFromAws,
+  deleteFileFromAws,
+  uploadIcon,
+} from "../config/s3.js";
 import { sendEmail } from "./sendEmail.js";
 import { ManagementClient } from "auth0";
 import { v4 as uuidv4 } from "uuid";
@@ -192,6 +197,11 @@ const UserController = async (req, res) => {
       } else {
         login.user_name_link = user.user_name_link;
         login.user_name = user.user_name;
+
+        if (user.origin_picture === "aws") {
+          login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
+        }
+
         if (user.buy_status === "Success") {
           login.buy_status = "Success";
 
@@ -234,19 +244,24 @@ const UserController = async (req, res) => {
 };
 
 const DeleteAccount = async (req, res) => {
-  const { user_id, reimbursement_status } = req.body;
+  const user_id = req.oidc.user.sub;
 
   try {
-    if (user_id !== req.oidc.user.sub) {
-      //garantindo se o usuário é o mesmo logado
-      return res.redirect("/h/home");
-    }
     const user = await LinqbioDb.findOne({ user_id });
 
-    if (
-      //reimbursement_status === "Authorized" &&
-      user.buy_status === "Success"
-    ) {
+    if (!user) {
+      return res.redirect("/");
+    }
+
+    let userCustom = await UserCustom.findOne({ user_id });
+
+    userCustom.links_user.forEach(async (e) => {
+      if (e.icon_question === "yes-custom") {
+        await deleteFileFromAws(e.icon_picture);
+      }
+    });
+
+    if (user.buy_status === "Success") {
       if (user.reimbursement_status === "In review") {
         const date_now = new Date();
         const date_pay = new Date(user.date_created_payment);
@@ -270,7 +285,7 @@ const DeleteAccount = async (req, res) => {
               user_name_link: "Canceled",
               buy_status: "Canceled",
               user_picture: "Canceled",
-              reimbursement_status: "Canceled",
+              reimbursement_status: "Expired",
             },
             { new: true }
           );
@@ -290,6 +305,7 @@ const DeleteAccount = async (req, res) => {
 
           await OverviewDb.deleteOne({ user_id });
 
+          //retirando a comissão
           const { plan } = user;
           const coupon_value = +process.env.COUPON_DESC;
           const commission = +process.env.COMMISSION;
@@ -361,9 +377,6 @@ const DeleteAccount = async (req, res) => {
           user_id: "Canceled",
           user_name_link: "canceled",
           user_picture: "canceled",
-          stripe_id: "Canceled",
-          buy_status: "Canceled",
-          reimbursement_status: "Expired",
         },
         { new: true }
       );
@@ -557,9 +570,6 @@ const CompletedPayment = async (req, res) => {
 
       const value_number = parseFloat(value_prod);
 
-      console.log(value_prod);
-      console.log(value_number);
-
       if (!check_sales) {
         await AffiliateDb.findOneAndUpdate(
           { coupon },
@@ -612,6 +622,10 @@ const AcessDashboard = async (req, res) => {
       reimbursement_status: user.reimbursement_status,
     };
 
+    if (user.origin_picture === "aws") {
+      login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
+    }
+
     const userCustom = await UserCustom.findOne({ user_id });
     if (!userCustom) {
       console.log("erro ao consultar dados");
@@ -649,6 +663,10 @@ const AcessCustom = async (req, res) => {
       reimbursement_status: user.reimbursement_status,
     };
 
+    if (user.origin_picture === "aws") {
+      login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
+    }
+
     if (user.buy_status !== "Success") {
       res.redirect("/");
     } else {
@@ -677,6 +695,12 @@ const AcessCustom = async (req, res) => {
 
       let userCustom = SearchUserCustom;
 
+      userCustom.links_user.forEach(async (e) => {
+        if (e.icon_question === "yes-custom") {
+          e.icon_picture = await getFileUrlFromAws(e.icon_picture, 3600);
+        }
+      });
+
       await UserCustom.findOneAndUpdate(
         { user_id },
         {
@@ -686,7 +710,6 @@ const AcessCustom = async (req, res) => {
       );
 
       return res.render("customPage", { userCustom, login });
-      //res.json({ userCustom });
     }
   } catch (error) {
     console.error(error);
@@ -695,13 +718,40 @@ const AcessCustom = async (req, res) => {
   }
 };
 
-// const UploadPhoto = async (req, res) => {
-//   try {
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: "Erro ao atualizar dados" });
-//   }
-// };
+const UploadPhoto = async (req, res) => {
+  const user_id = req.oidc.user.sub;
+  const file = req.file;
+
+  try {
+    const user = await LinqbioDb.findOne({ user_id }).select(
+      "user_picture origin_picture"
+    );
+
+    if (!!file) {
+      if (user.origin_picture === "aws") {
+        const result = await deleteFileFromAws(user.user_picture);
+        console.log(result);
+      }
+
+      await LinqbioDb.findOneAndUpdate(
+        { user_id },
+        { user_picture: file.key, origin_picture: "aws" },
+        { new: true }
+      );
+
+      await UserCustom.findOneAndUpdate(
+        { user_id },
+        { user_picture: file.key, origin_picture: "aws" },
+        { new: true }
+      );
+    }
+
+    res.redirect("/user/custom-page");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao atualizar dados" });
+  }
+};
 
 const UpdateProfile = async (req, res) => {
   const user_id = req.oidc.user.sub;
@@ -773,15 +823,47 @@ const UpdateBackground = async (req, res) => {
 const UpdateLink = async (req, res) => {
   const uniqueId = uuidv4();
   const user_id = req.oidc.user.sub;
+  const file = req.file;
   let log;
-  let { id_link, link, select_origin, other, title, description, action_link } =
-    req.body;
+  let {
+    id_link,
+    link,
+    select_origin,
+    other,
+    title,
+    description,
+    icon_question,
+    icon_picture,
+    action_link,
+  } = req.body;
 
   if (action_link === "save" && id_link !== "") {
     action_link = "edit";
   }
 
+  if (!file) {
+    icon_question = "no-custom";
+    icon_picture = `/imgs/icones/${select_origin}.svg`;
+  }
+
   try {
+    let check_custom = await UserCustom.findOne({
+      "links_user.id_link": id_link,
+    });
+    let picture = "";
+    let question = "";
+
+    if (check_custom) {
+      check_custom.links_user.forEach((e) => {
+        if (e.id_link === id_link) {
+          picture = e.icon_picture;
+          question = e.icon_question;
+        }
+      });
+    }
+
+    console.log(action_link);
+
     if (!link.toUpperCase().startsWith("HTTPS")) {
       log = "O link não é seguro ou é inválido, por favor utilizar https.";
 
@@ -794,7 +876,10 @@ const UpdateLink = async (req, res) => {
       );
     } else {
       if (action_link === "save") {
-        //adicionando novo link
+        if (icon_question === "yes-custom") {
+          icon_picture = file.key;
+        }
+
         await UserCustom.findOneAndUpdate(
           { user_id },
           {
@@ -803,6 +888,8 @@ const UpdateLink = async (req, res) => {
                 id_link: uniqueId,
                 link,
                 origin: select_origin,
+                icon_question,
+                icon_picture,
                 other,
                 title,
                 description,
@@ -824,6 +911,9 @@ const UpdateLink = async (req, res) => {
           { new: true }
         );
       } else if (action_link === "delete") {
+        if (question === "yes-custom") {
+          let result = await deleteFileFromAws(picture);
+        }
         await UserCustom.findOneAndUpdate(
           { user_id },
           {
@@ -843,12 +933,25 @@ const UpdateLink = async (req, res) => {
           { new: true }
         );
       } else {
+        if (question === "yes-custom") {
+          await deleteFileFromAws(picture);
+          if (icon_question === "yes-custom") {
+            icon_picture = file.key;
+          }
+          console.log("arquivo trocado com sucesso");
+        } else {
+          if (icon_question === "yes-custom") {
+            icon_picture = file.key;
+          }
+        }
         await UserCustom.findOneAndUpdate(
           { user_id, "links_user.id_link": id_link }, // Filtra pelo `id_link`
           {
             $set: {
               "links_user.$.link": link, // Atualiza campos específicos
               "links_user.$.origin": select_origin,
+              "links_user.$.icon_question": icon_question,
+              "links_user.$.icon_picture": icon_picture,
               "links_user.$.other": other,
               "links_user.$.title": title,
               "links_user.$.description": description,
@@ -891,7 +994,6 @@ const ViewPage = async (req, res) => {
     }
 
     if (date_now !== overview.mother_reference) {
-      //reiniciando do acesso mensal
       await OverviewDb.findOneAndUpdate(
         { user_id },
         {
@@ -935,6 +1037,13 @@ const ViewPage = async (req, res) => {
       }
     }
 
+    if (userCustom.origin_picture === "aws") {
+      userCustom.user_picture = await getFileUrlFromAws(
+        userCustom.user_picture,
+        3600
+      );
+    }
+
     return res.render("viewPage", { userCustom });
   } catch (error) {
     console.log(error);
@@ -955,13 +1064,16 @@ const AcessHelp = async (req, res) => {
     let login = {
       user_id: user.user_id,
       user_name: user.user_name,
+      user_name_link: user.user_name_link,
       user_email: user.user_email,
       user_picture: user.user_picture,
       buy_status: user.buy_status,
       reimbursement_status: user.reimbursement_status,
     };
 
-    //feat: validar-reembolso
+    if (user.origin_picture === "aws") {
+      login.user_picture = await getFileUrlFromAws(user.user_picture, 3600);
+    }
 
     return res.render("help", { login });
   } catch (error) {
@@ -1059,7 +1171,7 @@ export {
   Payment,
   CompletedPayment,
   AcessCustom,
-  // UploadPhoto,
+  UploadPhoto,
   UpdateProfile,
   UpdateBackground,
   UpdateLink,

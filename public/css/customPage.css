@@ -129,8 +129,8 @@ header {
 } */
 
 .navbar nav .user-icon img {
-  max-width: 50px;
-  max-width: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 0.1rem solid var(--color-text-primary);
 }
@@ -163,8 +163,8 @@ header {
 }
 
 .navbar nav .logged-user .profile img {
-  max-width: 50px;
-  max-width: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 0.1rem solid var(--color-text-primary);
 }
@@ -538,6 +538,7 @@ body {
 .section-view .view-links .icon img {
   max-width: 2rem;
   position: absolute;
+  border-radius: 0.5rem;
   left: 10%;
 }
 
@@ -862,7 +863,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .qrcode #copy {

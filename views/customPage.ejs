@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linqbio - Página Inicial</title>
-    <link rel="shortcut icon" href="./imgs/logo.png" type="image/x-icon" />
+    <title>Linqbio | Customizar Page</title>
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon" />
     <link rel="stylesheet" href="/css/customPage.css" />
 
     <link
@@ -16,7 +16,7 @@
   <body id="<%=userCustom.theme.body_theme%>">
     <header>
       <div class="navbar">
-        <h1><a href="/home" class="no-select">LBIO</a></h1>
+        <h1><a href="/h/home" class="no-select">LBIO</a></h1>
         <nav>
           <ul id="menu">
             <li><a href="/user/dashboard" id="dashboard">Dashboard</a></li>
@@ -183,7 +183,7 @@
             >
             <span class="icon">
               <img
-                src="<%= `/imgs/icones/${element.origin}.svg` %>"
+                src="<%= element.icon_picture %>"
                 alt="<%= element.origin %>"
             /></span>
             <span class="info">
@@ -222,7 +222,11 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Editar Foto de Perfil</h1>
-        <form action="/user/update-picture" enctype="multipart/form-data">
+        <form
+          action="/user/upload-photo"
+          enctype="multipart/form-data"
+          method="post"
+        >
           <div class="form-group">
             <div class="update-picture">
               <input
@@ -235,7 +239,7 @@
 
               <label for="user_picture"
                 ><img
-                  src="<%= userCustom.user_picture %>"
+                  src="<%= login.user_picture %>"
                   alt="gato desenho"
                   id="preview-image"
                 />
@@ -375,7 +379,7 @@
         <div id="close-form" class="no-select">
           <span class="material-symbols-outlined">close</span>
         </div>
-        <h1>Compatilhar Page</h1>
+        <h1>linqbio.me/<%=userCustom.user_name_link%></h1>
         <div class="qrcode">
           <canvas id="qrcode"></canvas>
 
@@ -403,7 +407,12 @@
           <span class="material-symbols-outlined">close</span>
         </div>
         <h1>Add ou Editar Link</h1>
-        <form id="add-link" action="/user/update-link" method="post">
+        <form
+          id="add-link"
+          action="/user/update-link"
+          method="post"
+          enctype="multipart/form-data"
+        >
           <input type="hidden" id="id_link" name="id_link" value="" />
           <!-- primerio formulário -->
           <div id="form-one">
@@ -473,9 +482,12 @@
                   <option value="tiktok">tiktok</option>
                   <option value="facebook">facebook</option>
                   <option value="instagram">instagram</option>
+                  <option value="whatsapp">whatsapp</option>
                   <option value="telegram">telegram</option>
                   <option value="behance">behance</option>
+                  <option value="discord">discord</option>
                   <option value="linqbio">linqbio</option>
+
                   <option value="linqbio">outro</option>
                 </select>
                 <input

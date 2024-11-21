@@ -8,6 +8,7 @@ const LinqbioSchema = new Schema({
   user_email: { type: String, required: true },
   user_name_link: { type: String, default: "No Link" },
   user_picture: { type: String, default: "./imgs/cat.png" },
+  origin_picture: { type: String, default: "standard" },
   stripe_id: { type: String, default: "Pending" },
   plan: { type: String, default: "Pending Payment" },
   coupon: { type: String, default: "No add" },
@@ -21,11 +22,12 @@ const UserCustomSchema = new Schema({
   user_id: { type: String, required: true },
   user_name_link: { type: String, required: true },
   user_picture: { type: String, required: true },
+  origin_picture: { type: String, default: "standard" },
   profile: {
     user_name: { type: String, required: true },
     user_description: {
       type: String,
-      default: "Me acompanhe em todas as redes",
+      default: "Me acompanhe em todas as redes ❤️",
     },
   },
   theme: {
@@ -38,6 +40,8 @@ const UserCustomSchema = new Schema({
       id_link: { type: String, default: "" },
       link: { type: String, default: "" },
       origin: { type: String, default: "" }, // TikTok, Instagram, etc.
+      icon_picture: { type: String, default: "" },
+      icon_question: { type: String, default: "no-custom" },
       other: { type: String, default: "" }, // Para outras origens, onde o usuário define o nome
       title: { type: String, default: "" },
       description: { type: String, default: "" },
