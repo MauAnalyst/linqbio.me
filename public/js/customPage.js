@@ -47,6 +47,7 @@ const modalPreview = document.querySelector(
   "#section-update-photo #edit-photo"
 );
 const savePicture = document.querySelector("#section-update-photo #salve");
+const loadingPicure = document.querySelector("#loading-picture");
 let cropper;
 
 addPhoto.addEventListener("click", () => {
@@ -75,10 +76,12 @@ closeFormPhoto.addEventListener("click", () => {
 uploadPhoto.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
+    loadingPicure.style.display = "flex";
     const reader = new FileReader();
     reader.onload = function (e) {
       containerPreview.style.display = "none";
       modal.style.display = "flex";
+      loadingPicure.style.display = "none";
       modalPreview.src = e.target.result;
       modalPreview.style.borderRadius = "0";
 
@@ -91,42 +94,9 @@ uploadPhoto.addEventListener("change", (event) => {
       });
     };
     reader.readAsDataURL(file);
+    document.querySelector("#loading").style.display = "flex";
   }
 });
-
-// savePicture.addEventListener("click", async () => {
-//   if (cropper) {
-//     const croppedCanvas = cropper.getCroppedCanvas();
-//     const croppedBlob = await new Promise((resolve) =>
-//       croppedCanvas.toBlob(resolve, "image/png")
-//     );
-
-//     // Cria um FormData e anexa o Blob
-//     const formData = new FormData();
-//     formData.append("user_picture", croppedBlob, "profile-picture.png");
-
-//     // Envia para o backend
-//     try {
-//       await fetch("/user/upload-photo", {
-//         method: "POST",
-//         body: formData,
-//       });
-
-//       const data = await response.json();
-//       if (data.redirectTo) {
-//         // Redireciona e atualiza a página
-//         window.location.href = data.redirectTo;
-//         setTimeout(() => {
-//           window.location.reload();
-//         }, 100); // Pequeno delay para garantir que a página seja recarregada
-//       }
-//     } catch (error) {
-//       console.error("Erro de rede", error);
-//     }
-//   } else {
-//     alert("Nenhuma imagem para salvar.");
-//   }
-// });
 
 const formUploadPicture = document.querySelector("#section-update-photo form");
 

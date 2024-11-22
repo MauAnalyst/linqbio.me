@@ -852,16 +852,19 @@ body {
 }
 
 #form-two select {
-  max-width: 40%;
+  max-width: 100%;
 }
+
+/* #form-two .form-sub-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+} */
 
 #form-two .form-group {
-  margin: auto;
-}
-
-#form-two .form-group .form-sub-group {
   gap: 0.1rem;
-  margin: 0;
 }
 
 /* qrcode */
@@ -912,6 +915,19 @@ footer p {
 }
 
 /* loading */
+
+#loading-picture {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: saturate(150%) blur(3px);
+}
 
 /* From Uiverse.io by Praashoo7 */
 #loading {
@@ -1021,8 +1037,8 @@ circle {
 
 #section-update-photo img {
   margin: auto;
-  max-width: 150px;
-  max-height: 150px;
+  width: 150px;
+  height: 150px;
   position: relative;
   cursor: pointer;
   border-radius: 50%;
@@ -1034,7 +1050,8 @@ circle {
 
 #section-update-photo #modal img {
   border-radius: 0%;
-  height: 200px;
+  width: 250px;
+  height: 250px;
 }
 
 #section-update-photo .update-picture {

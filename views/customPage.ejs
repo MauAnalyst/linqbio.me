@@ -502,19 +502,19 @@
                   <option value="spotify">spotify</option>
                   <option value="outro">outro</option>
                 </select>
-                <input
-                  type="text"
-                  id="other"
-                  name="other"
-                  placeholder="Escolha 'outro' para habilitar"
-                  maxlength="15"
-                  disabled
-                />
               </div>
+              <input
+                type="text"
+                id="other"
+                name="other"
+                placeholder="Escolha 'outro' para habilitar"
+                maxlength="15"
+                disabled
+              />
             </div>
             <div class="form-group">
               <label for="icon_picture"> Personalizar ícone? </label>
-              <!-- <div class="question-icon">
+              <div class="question-icon">
                 <div class="form-sub-group">
                   <input
                     type="radio"
@@ -534,7 +534,7 @@
                   />
                   <label for="icon-question-no">Não</label>
                 </div>
-              </div> -->
+              </div>
               <div class="form-sub-group icon-img">
                 <input
                   type="file"
@@ -587,6 +587,12 @@
         >
       </p>
     </footer>
+
+    <div id="loading-picture">
+      <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+      </svg>
+    </div>
 
     <div id="loading">
       <svg viewBox="25 25 50 50">
