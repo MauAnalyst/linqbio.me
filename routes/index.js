@@ -44,6 +44,9 @@ router.get("/h/not-found", (req, res) => {
 router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
 
+router.get("/callback", (req, res) => {
+  res.redirect("/");
+});
 router.get("/affiliate/dashboard", requiresAuth(), Affiliate);
 
 //payment
@@ -56,10 +59,6 @@ router.post("/user/delete-account", requiresAuth(), DeleteAccount);
 router.get("/user/dashboard", requiresAuth(), AcessDashboard);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
 router.get("/user/help", requiresAuth(), AcessHelp);
-
-router.post("/user/custom-page", (req, res) => {
-  res.redirect("/user/custom-page");
-});
 
 router.post(
   "/user/upload-photo",
