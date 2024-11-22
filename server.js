@@ -12,8 +12,6 @@ dotenv.config();
 const { auth } = auth0;
 const app = express();
 
-const isProduction = process.env.NODE_ENV === "production";
-
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -24,7 +22,7 @@ const config = {
   session: {
     cookie: {
       httpOnly: true,
-      secure: isProduction, // Apenas cookies seguros em produção
+      secure: false, // Apenas cookies seguros em produção
       sameSite: "Lax",
     },
   },
