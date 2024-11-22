@@ -28,10 +28,30 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 
 // autenticação Auth0
+app.use(cookieParser(process.env.AUTH0_CLIENT_SECRET)); // Use o mesmo segredo do Auth0
 app.use(auth(config));
 
 // Roteamento
 app.use("/", router);
+
+const isProduction = process.env.NODE_ENV === "production";
+
+app.use(
+  auth({
+    ...config,
+    authorizationParams: {
+      response_type: "code",
+      scope: "openid profile email",
+    },
+    session: {
+      cookie: {
+        httpOnly: true,
+        secure: isProduction, // Apenas cookies seguros em produção
+        sameSite: "lax",
+      },
+    },
+  })
+);
 
 const PORT = process.env.PORT || 3000;
 
