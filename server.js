@@ -19,13 +19,6 @@ const config = {
   baseURL: process.env.AUTH0_BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
-  session: {
-    cookie: {
-      httpOnly: true,
-      secure: false, // Apenas cookies seguros em produção
-      sameSite: "Lax",
-    },
-  },
 };
 
 app.use(express.json());
