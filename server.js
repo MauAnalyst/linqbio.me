@@ -19,6 +19,7 @@ const config = {
   baseURL: process.env.AUTH0_BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
+  clientAuthMethod: "client_secret_basic",
   authorizationParams: {
     response_type: "code",
     scope: "openid profile email",
