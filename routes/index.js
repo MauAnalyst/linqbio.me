@@ -28,6 +28,10 @@ const { requiresAuth } = auth0;
 
 app.use(express.static("public"));
 
+router.get("/callback", (req, res) => {
+  res.oidc.callback();
+});
+
 router.get("/config/linqbio", requiresAuth(), cadAffiliate);
 router.post("/configs/action-cad", requiresAuth(), EnvCadAff);
 
@@ -44,9 +48,6 @@ router.get("/h/not-found", (req, res) => {
 router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
 
-router.get("/callback", (req, res) => {
-  res.redirect("/");
-});
 router.get("/affiliate/dashboard", requiresAuth(), Affiliate);
 
 //payment
