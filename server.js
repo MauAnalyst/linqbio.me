@@ -42,13 +42,6 @@ app.use(cookieParser());
 // autenticação Auth0
 app.use(auth(config));
 
-app.use((req, res, next) => {
-  console.log("Session:", req.oidc.session);
-  console.log("Headers:", req.headers);
-  console.log("Cookies:", req.cookies);
-  next();
-});
-
 // Roteamento
 app.use("/", router);
 
