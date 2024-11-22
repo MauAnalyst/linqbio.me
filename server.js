@@ -25,6 +25,12 @@ const config = {
     scope: "openid profile email",
     state: true, // Habilita o state
   },
+  session: {
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
+  },
 };
 
 app.use(express.json());
