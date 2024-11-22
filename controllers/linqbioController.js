@@ -749,15 +749,14 @@ const AcessCustom = async (req, res) => {
 const UploadPhoto = async (req, res) => {
   const user_id = req.oidc.user.sub;
   const file = req.file;
-
   try {
     const user = await LinqbioDb.findOne({ user_id }).select(
       "user_picture origin_picture"
     );
 
-    if (!file) {
-      return res.redirect("/user/custom-page");
-    }
+    // if (!file) {
+    //   return res.redirect("/user/custom-page");
+    // }
 
     if (user.origin_picture === "aws") {
       await deleteFileFromAws(user.user_picture);
@@ -774,8 +773,8 @@ const UploadPhoto = async (req, res) => {
       { user_picture: file.key, origin_picture: "aws" },
       { new: true }
     );
-
     res.redirect("/user/custom-page");
+    //res.json({ redirectTo: `/user/custom-page?updated=${Date.now()}` });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao atualizar dados" });

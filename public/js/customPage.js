@@ -1,18 +1,6 @@
 const formBackground = document.querySelector("#form-background");
 const sectionViewm = document.querySelector(".section-view");
 
-//user photo
-const addPhoto = document.querySelector(".view-profile .profile-photo");
-const formUpdatePhoto = document.querySelector("#section-update-photo");
-const cancelFormPhoto = document.querySelector("#section-update-photo #cancel");
-const closeFormPhoto = document.querySelector(
-  "#section-update-photo #close-form"
-);
-const uploadPhoto = document.getElementById("user_picture");
-const imageToCrop = document.getElementById("image-to-crop");
-const previewImage = document.getElementById("preview-image");
-let cropper;
-
 //profile
 const editProfile = document.querySelector(".view-profile #edit-profile");
 const formUpdateProfile = document.querySelector("#section-update-profile");
@@ -44,6 +32,22 @@ const closeFormBackground = document.querySelector(
 );
 
 //form photo
+const addPhoto = document.querySelector(".view-profile .profile-photo");
+const formUpdatePhoto = document.querySelector("#section-update-photo");
+const cancelFormPhoto = document.querySelector("#section-update-photo #cancel");
+const closeFormPhoto = document.querySelector(
+  "#section-update-photo #close-form"
+);
+const uploadPhoto = document.getElementById("user_picture");
+const imageToCrop = document.getElementById("image-to-crop");
+const previewImage = document.getElementById("preview-image");
+const containerPreview = document.querySelector("#preview-photo");
+const modal = document.querySelector("#section-update-photo #modal");
+const modalPreview = document.querySelector(
+  "#section-update-photo #edit-photo"
+);
+const savePicture = document.querySelector("#section-update-photo #salve");
+let cropper;
 
 addPhoto.addEventListener("click", () => {
   formBackground.style.display = "block";
@@ -53,11 +57,19 @@ addPhoto.addEventListener("click", () => {
 cancelFormPhoto.addEventListener("click", () => {
   formBackground.style.display = "none";
   formUpdatePhoto.style.display = "none";
+  cropper.destroy();
+  containerPreview.style.display = "flex";
+  modal.style.display = "none";
+  uploadPhoto.value = "";
 });
 
 closeFormPhoto.addEventListener("click", () => {
   formBackground.style.display = "none";
   formUpdatePhoto.style.display = "none";
+  cropper.destroy();
+  containerPreview.style.display = "flex";
+  modal.style.display = "none";
+  uploadPhoto.value = "";
 });
 
 uploadPhoto.addEventListener("change", (event) => {
@@ -65,9 +77,79 @@ uploadPhoto.addEventListener("change", (event) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
-      document.getElementById("preview-image").src = e.target.result;
+      containerPreview.style.display = "none";
+      modal.style.display = "flex";
+      modalPreview.src = e.target.result;
+      modalPreview.style.borderRadius = "0";
+
+      cropper = new Cropper(modalPreview, {
+        aspectRatio: 1,
+        viewMode: 1,
+        rotatable: true,
+        scalable: true,
+        zoomable: true,
+      });
     };
     reader.readAsDataURL(file);
+  }
+});
+
+// savePicture.addEventListener("click", async () => {
+//   if (cropper) {
+//     const croppedCanvas = cropper.getCroppedCanvas();
+//     const croppedBlob = await new Promise((resolve) =>
+//       croppedCanvas.toBlob(resolve, "image/png")
+//     );
+
+//     // Cria um FormData e anexa o Blob
+//     const formData = new FormData();
+//     formData.append("user_picture", croppedBlob, "profile-picture.png");
+
+//     // Envia para o backend
+//     try {
+//       await fetch("/user/upload-photo", {
+//         method: "POST",
+//         body: formData,
+//       });
+
+//       const data = await response.json();
+//       if (data.redirectTo) {
+//         // Redireciona e atualiza a página
+//         window.location.href = data.redirectTo;
+//         setTimeout(() => {
+//           window.location.reload();
+//         }, 100); // Pequeno delay para garantir que a página seja recarregada
+//       }
+//     } catch (error) {
+//       console.error("Erro de rede", error);
+//     }
+//   } else {
+//     alert("Nenhuma imagem para salvar.");
+//   }
+// });
+
+const formUploadPicture = document.querySelector("#section-update-photo form");
+
+savePicture.addEventListener("click", async () => {
+  if (cropper) {
+    const croppedCanvas = cropper.getCroppedCanvas();
+
+    const croppedBlob = await new Promise((resolve) =>
+      croppedCanvas.toBlob(resolve, "image/png")
+    );
+
+    // Criar o arquivo Blob e anexar ao formulário
+    const dataTransfer = new DataTransfer();
+    const file = new File([croppedBlob], "profile-picture.png", {
+      type: "image/png",
+    });
+    dataTransfer.items.add(file);
+    uploadPhoto.files = dataTransfer.files;
+
+    // Enviar o formulário
+    formUploadPicture.submit();
+  } else {
+    alert("Nenhuma imagem para salvar.");
   }
 });
 

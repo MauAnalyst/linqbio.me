@@ -57,6 +57,10 @@ router.get("/user/dashboard", requiresAuth(), AcessDashboard);
 router.get("/user/custom-page", requiresAuth(), AcessCustom);
 router.get("/user/help", requiresAuth(), AcessHelp);
 
+router.post("/user/custom-page", (req, res) => {
+  res.redirect("/user/custom-page");
+});
+
 router.post(
   "/user/upload-photo",
   requiresAuth(),

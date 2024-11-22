@@ -399,6 +399,7 @@ body {
 .section-view .view-profile .profile-photo img {
   width: 80px;
   height: 80px;
+  border: 0.1rem solid var(--color-text-primary);
   border-radius: 50%;
   position: relative;
 }
@@ -780,8 +781,7 @@ body {
 }
 
 .section-form .forms .form-group #salve,
-.section-form .forms .form-group #follow,
-#crop-save {
+.section-form .forms .form-group #follow {
   background-color: var(--color-action-primary);
   color: var(--color-background-primary);
 }
@@ -800,8 +800,7 @@ body {
 }
 
 .section-form .forms .form-group #salve:hover,
-.section-form .forms .form-group #follow:hover,
-#crop-save:hover {
+.section-form .forms .form-group #follow:hover {
   background-color: var(--color-action-primary-hover);
 }
 .section-form .forms .form-group #cancel:hover,
@@ -823,8 +822,8 @@ body {
 }
 
 .section-form .forms .form-group .icon-img img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
 }
 
@@ -843,25 +842,8 @@ body {
   cursor: pointer;
 }
 
-/* #other {
-  max-width: 30%;
-} */
-
-#form-two {
-  margin: auto;
-}
-
-#form-two select {
+#other {
   max-width: 40%;
-}
-
-#form-two .form-group {
-  margin: auto;
-}
-
-#form-two .form-group .form-sub-group {
-  gap: 0.1rem;
-  margin: 0;
 }
 
 /* qrcode */
@@ -1020,21 +1002,12 @@ circle {
 /* foto de perfil */
 
 #section-update-photo img {
-  margin: auto;
-  max-width: 150px;
-  max-height: 150px;
+  width: 100px;
+  height: 100px;
+  border: 0.1rem solid var(--color-text-primary);
+  border-radius: 50%;
   position: relative;
   cursor: pointer;
-  border-radius: 50%;
-}
-
-#section-update-photo #modal {
-  border-radius: 50%;
-}
-
-#section-update-photo #modal img {
-  border-radius: 0%;
-  height: 200px;
 }
 
 #section-update-photo .update-picture {
@@ -1048,7 +1021,6 @@ circle {
   position: absolute;
   bottom: 0;
   right: 30%;
-  font-size: 2rem;
   background-color: var(--color-action-primary);
   border: 0.1rem solid var(--color-text-primary);
   color: #fff;
