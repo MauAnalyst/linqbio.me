@@ -12,6 +12,8 @@ dotenv.config();
 const { auth } = auth0;
 const app = express();
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -44,8 +46,6 @@ app.use(auth(config));
 
 // Roteamento
 app.use("/", router);
-
-const isProduction = process.env.NODE_ENV === "production";
 
 const PORT = process.env.PORT || 3000;
 
