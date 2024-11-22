@@ -19,6 +19,17 @@ const config = {
   baseURL: process.env.AUTH0_BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
+  authorizationParams: {
+    response_type: "code",
+    scope: "openid profile email",
+  },
+  session: {
+    cookie: {
+      httpOnly: true,
+      secure: isProduction, // Apenas cookies seguros em produção
+      sameSite: "Lax",
+    },
+  },
 };
 
 app.use(express.json());
@@ -35,23 +46,6 @@ app.use(auth(config));
 app.use("/", router);
 
 const isProduction = process.env.NODE_ENV === "production";
-
-app.use(
-  auth({
-    ...config,
-    authorizationParams: {
-      response_type: "code",
-      scope: "openid profile email",
-    },
-    session: {
-      cookie: {
-        httpOnly: true,
-        secure: isProduction, // Apenas cookies seguros em produção
-        sameSite: "Lax",
-      },
-    },
-  })
-);
 
 const PORT = process.env.PORT || 3000;
 
