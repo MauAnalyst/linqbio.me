@@ -19,6 +19,11 @@ const config = {
   baseURL: process.env.AUTH0_BASE_URL,
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
+  authorizationParams: {
+    response_type: "code",
+    scope: "openid profile email",
+    state: true, // Habilita o state
+  },
 };
 
 app.use(express.json());
