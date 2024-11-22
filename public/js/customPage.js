@@ -94,7 +94,6 @@ uploadPhoto.addEventListener("change", (event) => {
       });
     };
     reader.readAsDataURL(file);
-    document.querySelector("#loading").style.display = "flex";
   }
 });
 
@@ -118,6 +117,7 @@ savePicture.addEventListener("click", async () => {
 
     // Enviar o formulário
     formUploadPicture.submit();
+    document.querySelector("#loading").style.display = "flex";
   } else {
     alert("Nenhuma imagem para salvar.");
   }
