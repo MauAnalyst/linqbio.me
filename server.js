@@ -47,7 +47,7 @@ app.use(
       cookie: {
         httpOnly: true,
         secure: isProduction, // Apenas cookies seguros em produção
-        sameSite: "lax",
+        sameSite: "Lax",
       },
     },
   })
