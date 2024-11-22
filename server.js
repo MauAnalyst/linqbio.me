@@ -35,8 +35,12 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 
 // autenticação Auth0
-app.use(cookieParser(process.env.AUTH0_CLIENT_SECRET)); // Use o mesmo segredo do Auth0
 app.use(auth(config));
+
+app.use((req, res, next) => {
+  console.log("Session:", req.oidc.session);
+  next();
+});
 
 // Roteamento
 app.use("/", router);
