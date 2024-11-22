@@ -386,15 +386,16 @@
         <div class="qrcode">
           <canvas id="qrcode"></canvas>
 
+          <a id="user-link" href="/<%=userCustom.user_name_link%>"
+            >https://www.linqbio.me/<%=userCustom.user_name_link%></a
+          >
           <div class="share-link">
-            <a id="user-link" href="/<%=userCustom.user_name_link%>"
-              >https://www.linqbio.me/<%=userCustom.user_name_link%></a
-            >
             <!-- <span class="material-symbols-outlined" id="content-share"
               >share</span
             > -->
-            <span class="material-symbols-outlined" id="copy"
-              >content_copy</span
+            <span id="copy"
+              ><span class="material-symbols-outlined">content_copy</span>
+              copiar</span
             >
           </div>
         </div>

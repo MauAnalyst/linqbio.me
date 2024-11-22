@@ -883,18 +883,23 @@ body {
   color: #ffffff;
   padding: 0.5rem;
   border-radius: 0.5rem;
+  margin-top: 2rem;
 }
 
 .qrcode .share-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .qrcode #copy {
   background-color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   color: #ffffff;
   border-radius: 0.5rem;
   padding: 0.5rem;
