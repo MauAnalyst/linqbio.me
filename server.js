@@ -25,12 +25,6 @@ const config = {
     scope: "openid profile email",
     state: true, // Habilita o state
   },
-  session: {
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
-    },
-  },
 };
 
 app.use(express.json());
@@ -38,6 +32,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  if (req.hostname === "linqbio.me") {
+    console.log("passou aq mano");
+    return res.redirect(301, `https://www.linqbio.me${req.originalUrl}`);
+  }
+  next();
+});
 
 // autenticação Auth0
 app.use(auth(config));
