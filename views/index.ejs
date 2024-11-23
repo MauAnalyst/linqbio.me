@@ -10,7 +10,20 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_downandcheckandmenuandcloseandpersonandarrow_drop_downanddeleteandlogout"
     />
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XL8BRPYKNZ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
+      gtag("config", "G-XL8BRPYKNZ");
+    </script>
   </head>
   <body>
     <header>
@@ -19,7 +32,7 @@
         <nav>
           <ul id="menu">
             <% if (login.affiliate === true){ %>
-              <li><a href="/affiliate/dashboard">Afiliados</a></li>
+            <li><a href="/affiliate/dashboard">Afiliados</a></li>
             <% } %>
             <li><a href="/h/home#exemples">Exemplos</a></li>
             <li><a href="/h/home#howWorks">Como Funciona</a></li>
@@ -71,10 +84,12 @@
       <div id="items-menu-resp">
         <ul>
           <% if (login.affiliate === true){ %>
-            <li><a href="/affiliate/dashboard">Afiliados</a></li>
+          <li><a href="/affiliate/dashboard">Afiliados</a></li>
           <% } %>
           <li><a href="/h/home#exemples" class="no-select">Exemplos</a></li>
-          <li><a href="/h/home#howWorks" class="no-select">Como Funciona</a></li>
+          <li>
+            <a href="/h/home#howWorks" class="no-select">Como Funciona</a>
+          </li>
           <li><a href="/h/home#pricing" class="no-select">Preços</a></li>
           <li><a href="/h/home#help" class="no-select">Help</a></li>
         </ul>
@@ -86,33 +101,37 @@
         <h2>Aaaaah nããooooo</h2>
         <img src="/imgs/bored.png" alt="gato triste" />
         <% if(login.buy_status === 'Success'){ %> <% if(
-          login.reimbursement_status === 'Authorized' ){ %>
-          <p>
-            Poxa, tem certeza que deseja <br />
-            deletar sua conta ? <br />
-            <span class="warning"
-              >você será reembolsado em até 10 dias utéis.</span
-            >
-            <br />
-          </p>
-          <% } else {%>
-          <p>
-            Poxa, tem certeza que deseja <br />
-            deletar sua conta ? <br />
-            <span class="warning"
-              >você não terá direito ao reembolso, <br />
-              pois a compra foi efetuada a mais de 7 dias.</span
-            >
-            <br />
-          </p>
-          <% } %> <% } else { %>
-          <p>
-            Poxa, você tem certeza que deseja <br />
-            deletar usa conta ?
-          </p>
-          <% } %>
+        login.reimbursement_status === 'Authorized' ){ %>
+        <p>
+          Poxa, tem certeza que deseja <br />
+          deletar sua conta ? <br />
+          <span class="warning"
+            >você será reembolsado em até 10 dias utéis.</span
+          >
+          <br />
+        </p>
+        <% } else {%>
+        <p>
+          Poxa, tem certeza que deseja <br />
+          deletar sua conta ? <br />
+          <span class="warning"
+            >você não terá direito ao reembolso, <br />
+            pois a compra foi efetuada a mais de 7 dias.</span
+          >
+          <br />
+        </p>
+        <% } %> <% } else { %>
+        <p>
+          Poxa, você tem certeza que deseja <br />
+          deletar usa conta ?
+        </p>
+        <% } %>
 
-        <form action="/user/delete-account" class="actions-buttons" method="post">
+        <form
+          action="/user/delete-account"
+          class="actions-buttons"
+          method="post"
+        >
           <input
             type="hidden"
             id="user_id"
@@ -156,7 +175,7 @@
     <!-- se o usuário estiver logado e não tiver o plano -->
     <section class="section-auth-no-plan">
       <h1>Você está quase lá, <%= login.user_name %>.</h1>
-      
+
       <form action="/user/checkout" method="post">
         <input
           type="hidden"
@@ -214,18 +233,23 @@
         </div>
 
         <div id="coupon-input">
-          <label for="coupon">Cupom (40% de desconto)</label>
-          <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro === 'Coupon'){ %>
-            <p id="msgm-erro"><%= log_erro.msgm %></p>
-            <% } %>
-          <input type="text" id="coupon" name="coupon">
+          <label for="coupon">Cupom (30% de desconto)</label>
+          <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro
+          === 'Coupon'){ %>
+          <p id="msgm-erro"><%= log_erro.msgm %></p>
+          <% } %>
+          <input type="text" id="coupon" name="coupon" />
         </div>
 
         <div class="user-link">
-        <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
-        <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro === 'Invalid link'){ %>
+          <label for="user_name_link"
+            ><p>Adicione seu nome de usuário</p></label
+          >
+          <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro
+          === 'Invalid link'){ %>
           <p id="msgm-erro"><%= log_erro.msgm %></p>
           <% } %>
+        </div>
         <div class="form-link">
           <div class="user-link-input">
             <label for="user_name_link">linqbio.me/</label>
@@ -237,16 +261,29 @@
               value="<%= login.user_name_link %>"
             />
           </div>
-          <button type="submit" class="submit" id="create-page">Criar Page</button>
+          <button type="submit" class="submit" id="create-page">
+            Criar Page
+          </button>
         </div>
-        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Ao prosseguir você concorda com os <br><a href="/h/terms-and-privacy" target="_blank" style="border-bottom: 0.1rem solid black;">Termos de uso e Política de privacidade</a></p>
-   
+        <p style="font-size: 0.8rem; margin-top: 0.5rem">
+          Ao prosseguir você concorda com os <br /><a
+            href="/h/terms-and-privacy"
+            target="_blank"
+            style="border-bottom: 0.1rem solid black"
+            >Termos de uso e Política de privacidade</a
+          >
+        </p>
       </form>
     </section>
     <% } %>
     <footer>
       <p>Desenvolvido por Mauricio Brito dos Santos</p>
-      <p>&copy; 2024 Linqbio. Todos os direitos reservados. <a href="/h/terms-and-privacy" style="border-bottom: 0.1rem solid black;">Termos de uso e Política de privacidade</a></p>
+      <p>
+        &copy; 2024 Linqbio. Todos os direitos reservados.
+        <a href="/h/terms-and-privacy" style="border-bottom: 0.1rem solid black"
+          >Termos de uso e Política de privacidade</a
+        >
+      </p>
     </footer>
 
     <div id="loading">
@@ -254,7 +291,6 @@
         <circle r="20" cy="50" cx="50"></circle>
       </svg>
     </div>
-    
 
     <!-- JS da navegção responsiva -->
     <script src="/js/menu.js"></script>
