@@ -241,15 +241,13 @@
           <input type="text" id="coupon" name="coupon" />
         </div>
 
-        <div class="user-link">
-          <label for="user_name_link"
-            ><p>Adicione seu nome de usuário</p></label
-          >
-          <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro
-          === 'Invalid link'){ %>
-          <p id="msgm-erro"><%= log_erro.msgm %></p>
-          <% } %>
-        </div>
+        <!-- <div class="user-link"> -->
+        <label for="user_name_link"><p>Adicione seu nome de usuário</p></label>
+        <% if(typeof log_erro.type_erro !== 'undefined' && log_erro.type_erro
+        === 'Invalid link'){ %>
+        <p id="msgm-erro"><%= log_erro.msgm %></p>
+        <% } %>
+        <!-- </div> -->
         <div class="form-link">
           <div class="user-link-input">
             <label for="user_name_link">linqbio.me/</label>
