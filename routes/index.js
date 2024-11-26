@@ -28,7 +28,7 @@ const { requiresAuth } = auth0;
 
 app.use(express.static("public"));
 
-router.get("/callback", (req, res) => {
+router.get("/callback", (req, res) => { 
   res.oidc.callback();
 });
 
@@ -41,10 +41,14 @@ router.get("/h/home", (req, res) => {
 router.get("/h/terms-and-privacy", (req, res) => {
   res.render("terms");
 });
-
 router.get("/h/not-found", (req, res) => {
   res.render("status404");
 });
+
+router.get("/h/blog/overview", (req, res) => {
+  res.render('blogOverview')
+})
+
 router.post("/user/create-account", fastUserCreation);
 router.get("/", UserController);
 
